@@ -34,3 +34,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## 環境構築
+1. gcpのマーケットプレースからWordPress Certified by Bitnami and Automatticを選んで構築
+ぷらぐいん：WPGraphQL
+2. ローカルでvercelの開発環境を構築
+
+### ローカルでのWordPress環境構築 (Docker)
+
+ローカルでWordPress環境も同時に動かして開発する場合、Docker Compose を利用するのが便利です。
+
+1. `docker-compose.yaml` の `environment` セクションにあるパスワードを任意のものに変更します。
+2. 以下のコマンドでWordPressとデータベースを起動します。
+   ```bash
+   docker-compose up -d
+   ```
+3. ブラウザで `http://localhost:8080` にアクセスし、WordPressの初期設定を行います。
+4. 管理画面から `WPGraphQL` プラグインをインストール・有効化します。
+5. Next.jsアプリが `http://localhost:8080/graphql` を参照するように設定します。

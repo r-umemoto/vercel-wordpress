@@ -18,3 +18,44 @@ services:
     # .env.localファイルに書かれた環境変数をコンテナに読み込ませます
     env_file:
       - .env.local
+  # docker-compose.yaml
+  db:
+    image: mysql:8.0
+    container_name: wordpress_db
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: your_wordpress_db_password
+    restart: always
+    networks:
+      - wordpress-net
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    depends_on:
+      - db
+    ports:
+      - "8080:80" # ローカルの8080番ポートをコンテナの80番ポートに接続
+    volumes:
+      # WPGraphQLプラグインなどを配置するためにマウントしておくと便利です
+      # ./plugins:/var/www/html/wp-content/plugins
+      - ./themes:/var/www/html/wp-content/themes
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: your_wordpress_db_password
+      WORDPRESS_DB_NAME: wordpress
+    restart: always
+    networks:
+      - wordpress-net
+
+volumes:
+  db_data:
+
+
+networks:
+  wordpress-net:
