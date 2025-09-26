@@ -5,23 +5,18 @@ VercelとヘッドレスWordPressを連携させるためのプロジェクト�
 
 ## 環境構築
 
-### 作業環境
-* windows11
-* wls2
+このプロジェクトは、フロントエンドの開発環境としてDockerを利用します。
 
-### WordPress
+### 必要なツール
+*   [Docker](https://www.docker.com/get-started)
+*   [Node.js (npm/npx)](https://nodejs.org/ja/) (v18.x 以上) - Next.jsの初期セットアップ(`npx create-next-app`)にのみ使用します。
+*   Windowsをお使いの場合は、[WSL2](https://learn.microsoft.com/ja-jp/windows/wsl/install) の利用を推奨します。
+
+### WordPress環境
+ヘッドレスCMSとして利用するWordPress環境を別途ご用意ください。（例: クラウドサーバー、ローカル環境など）
 1. google cloudのMarketPlaceでWordPress Certified by Bitnami and Automatticを選択して構築
 2. word pressにログインしてプラグインを追加
 WPGraphQL
-
-### ローカル環境
-1. ubuntu 24.04 LTSをインストール
-2. dockerをインストール
-
-### 必要なツール
-*   [Node.js](https://nodejs.org/ja/) (v18.x 以上)
-*   [npm](https://www.npmjs.com/) または [yarn](https://yarnpkg.com/)
-*   [Vercel CLI](https://vercel.com/docs/cli) (任意)
 
 ### 手順
 
@@ -31,11 +26,20 @@ WPGraphQL
     cd vercel-wordpress
     ```
 
-2.  **依存関係をインストールします**
+2.  **Next.jsアプリケーションを作成します**
+    クローンしたディレクトリの中で、Next.jsプロジェクトの雛形を作成します。
     ```bash
-    npm install
-    # or
-    # yarn install
+    # カレントディレクトリにNext.jsプロジェクトを作成
+    npx create-next-app@latest .
+    ```
+    実行すると対話形式で質問されます。以下は推奨設定です（お好みで変更してください）。
+    ```
+    ✔ Would you like to use TypeScript? … Yes
+    ✔ Would you like to use ESLint? … Yes
+    ✔ Would you like to use Tailwind CSS? … No
+    ✔ Would you like to use `src/` directory? … Yes
+    ✔ Would you like to use App Router? (recommended) … Yes
+    ✔ Would you like to customize the default import alias? … No
     ```
 
 3.  **環境変数を設定します**
@@ -43,16 +47,26 @@ WPGraphQL
     ```bash
     cp .env.local.example .env.local
     ```
-    `.env.local`の中身:
+    `.env.local`の中身を編集:
     ```
     WORDPRESS_API_URL=https://your-wordpress-site.com/graphql
     ```
 
-4.  **開発サーバーを起動します**
+4.  **開発サーバーを起動します (Docker)**
+    以下のコマンドで、Dockerコンテナをビルドして起動します。
     ```bash
-    npm run dev
+    docker-compose up --build
     ```
-    http://localhost:3000 で開発中のサイトを確認できます。
+    ブラウザで `http://localhost:3000` にアクセスすると、開発中のサイトが表示されます。
+    
+    *   2回目以降の起動は `docker-compose up` だけでOKです。
+    *   コードを編集すると、変更が自動で反映されます。
+
+5.  **開発環境を停止します**
+    ターミナルで `Ctrl + C` を押した後、以下のコマンドを実行するとコンテナが停止・削除されます。
+    ```bash
+    docker-compose down
+    ```
 
 ## デプロイ
 
