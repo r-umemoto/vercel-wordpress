@@ -32,7 +32,9 @@ services:
       - wordpress-net
 
   wordpress:
-    image: wordpress:latest
+    build:
+      context: .
+      dockerfile: wordpress.Dockerfile
     container_name: wordpress_app
     depends_on:
       - db
