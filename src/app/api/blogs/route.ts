@@ -18,23 +18,29 @@ export async function GET(request: Request) {
   const limit = searchParams.get('limit');
   const offset = searchParams.get('offset');
 
-  // Filter params
+  // Detailed search fields
   const title = searchParams.get('title');
   const description = searchParams.get('description');
   const content = searchParams.get('content');
   const publishedAt = searchParams.get('publishedAt');
 
-  const queries: MicroCMSQueries = {};
-  
-  // Build filters
-  const filters: string[] = [];
-  if (title) filters.push(`title[contains]${title}`);
-  if (description) filters.push(`description[contains]${description}`);
-  if (content) filters.push(`content[contains]${content}`);
-  if (publishedAt) filters.push(`publishedAt[contains]${publishedAt}`);
+  // Simple search field
+  const q = searchParams.get('q');
 
-  if (filters.length > 0) {
-    queries.filters = filters.join('[or]');
+  const queries: MicroCMSQueries = {};
+
+  // Build filters for detailed search
+  const detailFilters: string[] = [];
+  if (title) detailFilters.push(`title[contains]${title}`);
+  if (description) detailFilters.push(`description[contains]${description}`);
+  if (content) detailFilters.push(`content[contains]${content}`);
+  if (publishedAt) detailFilters.push(`publishedAt[contains]${publishedAt}`);
+
+  if (detailFilters.length > 0) {
+    queries.filters = detailFilters.join('[or]');
+  } else if (q) {
+    // Fallback to simple full-text search
+    queries.q = q;
   }
 
   // Add pagination to queries
