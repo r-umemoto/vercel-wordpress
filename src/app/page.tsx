@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import Link from "next/link";
 import type { Property } from "./api/blogs/route";
 
 const LIMIT = 10; // 1ページあたりの表示件数
@@ -81,7 +82,11 @@ export default function Home() {
               </h2>
               <ul className="mt-4 space-y-2">
                 {properties.map((property) => (
-                  <li key={property.id} className="text-lg">{property.title}</li>
+                  <li key={property.id} className="text-lg">
+                    <Link href={`/properties/${property.id}`} className="hover:underline">
+                      {property.title}
+                    </Link>
+                  </li>
                 ))}
               </ul>
               
