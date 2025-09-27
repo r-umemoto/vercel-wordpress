@@ -45,10 +45,16 @@ export async function GET(request: Request) {
 
   // Add pagination to queries
   if (limit) {
-    queries.limit = parseInt(limit, 10);
+    const parsedLimit = parseInt(limit, 10);
+    if (!isNaN(parsedLimit)) {
+      queries.limit = parsedLimit;
+    }
   }
   if (offset) {
-    queries.offset = parseInt(offset, 10);
+    const parsedOffset = parseInt(offset, 10);
+    if (!isNaN(parsedOffset)) {
+      queries.offset = parsedOffset;
+    }
   }
 
   try {
