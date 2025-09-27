@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { client } from "@/lib/microcms";
 import type { Property } from "../route";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
