@@ -83,6 +83,16 @@ export default function Home() {
         onClose={() => setIsMenuOpen(false)}
         onSearch={handleDetailedSearch}
       />
+
+      {/* New Detailed Search Trigger Button */}
+      <button
+        onClick={() => setIsMenuOpen(true)}
+        className="fixed top-1/2 -translate-y-1/2 left-0 z-30 bg-orange-500 text-white py-4 px-2 rounded-r-lg cursor-pointer hover:bg-orange-600 shadow-lg"
+        aria-label="詳細検索を開く"
+      >
+        <span style={{ writingMode: 'vertical-rl' }}>詳細検索</span>
+      </button>
+
       <main className="flex min-h-screen flex-col items-center p-24">
         <div className="w-full max-w-2xl">
           <h1 className="text-4xl font-bold text-center mb-12">物件検索</h1>
@@ -111,14 +121,6 @@ export default function Home() {
                 検索
               </button>
             </form>
-
-            {/* Detailed Search Trigger */}
-            <button
-              onClick={() => setIsMenuOpen(true)}
-              className="text-sm text-gray-600 dark:text-gray-400 hover:underline"
-            >
-              詳細検索を開く
-            </button>
 
             {error && <p className="text-red-500 mt-4">{error}</p>}
             {isLoading && <p className="mt-4">検索中...</p>}

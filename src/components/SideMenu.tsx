@@ -61,7 +61,7 @@ export default function SideMenu({ isOpen, onClose, onSearch }: Props) {
             className="space-y-4"
           >
             <div>
-              <label htmlFor="title" className="block text-sm font-medium">Title</label>
+              <label htmlFor="title" className="block text-sm font-medium">物件名</label>
               <input
                 type="text"
                 id="title"
@@ -72,7 +72,7 @@ export default function SideMenu({ isOpen, onClose, onSearch }: Props) {
               />
             </div>
             <div>
-              <label htmlFor="description" className="block text-sm font-medium">Description</label>
+              <label htmlFor="description" className="block text-sm font-medium">概要</label>
               <input
                 type="text"
                 id="description"
@@ -83,7 +83,7 @@ export default function SideMenu({ isOpen, onClose, onSearch }: Props) {
               />
             </div>
             <div>
-              <label htmlFor="content" className="block text-sm font-medium">Content</label>
+              <label htmlFor="content" className="block text-sm font-medium">本文</label>
               <input
                 type="text"
                 id="content"
