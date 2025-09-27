@@ -17,10 +17,18 @@ const client = createClient({
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get('q');
+  const limit = searchParams.get('limit');
+  const offset = searchParams.get('offset');
 
   const queries: MicroCMSQueries = {};
   if (q) {
     queries.q = q;
+  }
+  if (limit) {
+    queries.limit = parseInt(limit, 10);
+  }
+  if (offset) {
+    queries.offset = parseInt(offset, 10);
   }
 
   try {
@@ -28,7 +36,8 @@ export async function GET(request: Request) {
       endpoint: "blog",
       queries: queries,
     });
-    return NextResponse.json(data.contents);
+    // コンテンツと総件数を返す
+    return NextResponse.json({ contents: data.contents, totalCount: data.totalCount });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
