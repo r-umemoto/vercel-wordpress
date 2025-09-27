@@ -1,8 +1,8 @@
-import { createClient } from "microcms-js-sdk";
+import { createClient, type MicroCMSQueries } from "microcms-js-sdk";
 import { NextResponse } from "next/server";
 
-// ブログ記事の型定義
-export interface Blog {
+// 物件の型定義
+export interface Property {
   id: string;
   title: string;
   publishedAt: string;
@@ -14,16 +14,25 @@ const client = createClient({
   apiKey: process.env.MICROCMS_API_KEY || "",
 });
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const q = searchParams.get('q');
+
+  const queries: MicroCMSQueries = {};
+  if (q) {
+    queries.q = q;
+  }
+
   try {
-    const data = await client.getList<Blog>({
-      endpoint: "blog", // microCMSのAPIエンドポイント名
+    const data = await client.getList<Property>({
+      endpoint: "blog",
+      queries: queries,
     });
     return NextResponse.json(data.contents);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Failed to fetch blogs from microCMS" },
+      { error: "Failed to fetch properties from microCMS" },
       { status: 500 }
     );
   }
