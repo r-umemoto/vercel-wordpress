@@ -4,9 +4,9 @@ import type { Property } from "../route";
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const id = context.params.id;
+  const { id } = await context.params;
   if (!id) {
     return NextResponse.json({ error: "ID is required" }, { status: 400 });
   }
