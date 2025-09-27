@@ -1,5 +1,5 @@
 import { type MicroCMSQueries } from "microcms-js-sdk";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { client } from "@/lib/microcms";
 
 // 物件の型定義
@@ -11,8 +11,8 @@ export interface Property {
   content?: string;
 }
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
   
   // Pagination params
   const limit = searchParams.get('limit');
