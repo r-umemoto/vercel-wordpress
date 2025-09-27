@@ -1,6 +1,6 @@
 import { type MicroCMSQueries } from "microcms-js-sdk";
 import { NextResponse } from "next/server";
-import { client } from "../../../lib/microcms";
+import { client } from "@/lib/microcms";
 
 // 物件の型定義
 export interface Property {

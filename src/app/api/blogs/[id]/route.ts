@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { client } from "../../../lib/microcms";
+import { client } from "@/lib/microcms";
 import type { Property } from "../route";
 
 export async function GET(
