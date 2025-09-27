@@ -13,14 +13,31 @@ export interface Property {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const q = searchParams.get('q');
+  
+  // Pagination params
   const limit = searchParams.get('limit');
   const offset = searchParams.get('offset');
 
+  // Filter params
+  const title = searchParams.get('title');
+  const description = searchParams.get('description');
+  const content = searchParams.get('content');
+  const publishedAt = searchParams.get('publishedAt');
+
   const queries: MicroCMSQueries = {};
-  if (q) {
-    queries.q = q;
+  
+  // Build filters
+  const filters: string[] = [];
+  if (title) filters.push(`title[contains]${title}`);
+  if (description) filters.push(`description[contains]${description}`);
+  if (content) filters.push(`content[contains]${content}`);
+  if (publishedAt) filters.push(`publishedAt[contains]${publishedAt}`);
+
+  if (filters.length > 0) {
+    queries.filters = filters.join('[or]');
   }
+
+  // Add pagination to queries
   if (limit) {
     queries.limit = parseInt(limit, 10);
   }
