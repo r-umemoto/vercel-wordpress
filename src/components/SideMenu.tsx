@@ -94,9 +94,9 @@ export default function SideMenu({ isOpen, onClose, onSearch }: Props) {
               />
             </div>
             <div>
-              <label htmlFor="publishedAt" className="block text-sm font-medium">PublishedAt</label>
+              <label htmlFor="publishedAt" className="block text-sm font-medium">公開日時～</label>
               <input
-                type="text"
+                type="date"
                 id="publishedAt"
                 name="publishedAt"
                 value={criteria.publishedAt}

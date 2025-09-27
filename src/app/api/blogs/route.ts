@@ -34,7 +34,7 @@ export async function GET(request: Request) {
   if (title) detailFilters.push(`title[contains]${title}`);
   if (description) detailFilters.push(`description[contains]${description}`);
   if (content) detailFilters.push(`content[contains]${content}`);
-  if (publishedAt) detailFilters.push(`publishedAt[contains]${publishedAt}`);
+  if (publishedAt) detailFilters.push(`publishedAt[greater_than]${publishedAt}`);
 
   if (detailFilters.length > 0) {
     queries.filters = detailFilters.join('[or]');
