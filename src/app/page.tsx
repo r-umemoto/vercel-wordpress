@@ -136,15 +136,14 @@ export default function Home() {
                   <h2 className="text-2xl font-bold border-b pb-2 mb-4">
                     検索結果 ({totalCount}件)
                   </h2>
-                  <ul className="mt-4 space-y-2">
+                  <div className="mt-6 space-y-4">
                     {properties.map((property) => (
-                      <li key={property.id} className="text-lg">
-                        <Link href={`/properties/${property.id}`} className="hover:underline">
-                          {property.title}
-                        </Link>
-                      </li>
+                      <Link href={`/properties/${property.id}`} key={property.id} className="block p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{property.title}</h3>
+                        {property.description && <p className="text-gray-700 dark:text-gray-400">{property.description}</p>}
+                      </Link>
                     ))}
-                  </ul>
+                  </div>
                   
                   <div className="mt-8 flex justify-between items-center">
                     <button
