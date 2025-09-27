@@ -7,6 +7,7 @@ export interface Property {
   id: string;
   title: string;
   publishedAt: string;
+  description?: string;
   content?: string;
 }
 

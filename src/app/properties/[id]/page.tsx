@@ -25,16 +25,29 @@ export default async function PropertyDetail({ params }: Props) {
         <p className="text-center text-gray-500 dark:text-gray-400 mb-12">
           公開日: {new Date(property.publishedAt).toLocaleDateString()}
         </p>
-        {/* 
-          In a real-world application, you should sanitize the HTML content 
-          to prevent XSS attacks. Libraries like 'dompurify' are recommended.
-        */}
-        <div
-          className="space-y-4"
-          dangerouslySetInnerHTML={{
-            __html: property.content || "",
-          }}
-        />
+
+        {/* Summary Section */}
+        {property.description && (
+          <section className="mb-12 p-6 bg-gray-100 dark:bg-gray-800 rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">概要</h2>
+            <p className="text-gray-800 dark:text-gray-200">{property.description}</p>
+          </section>
+        )}
+
+        {/* Content Section */}
+        <section>
+          <h2 className="text-2xl font-bold mb-4">本文</h2>
+          {/* 
+            In a real-world application, you should sanitize the HTML content 
+            to prevent XSS attacks. Libraries like 'dompurify' are recommended.
+          */}
+          <div
+            className="space-y-4"
+            dangerouslySetInnerHTML={{
+              __html: property.content || "",
+            }}
+          />
+        </section>
       </article>
     </main>
   );
