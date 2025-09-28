@@ -9,6 +9,11 @@ export interface Property {
   publishedAt: string;
   description?: string;
   content?: string;
+  thumbnail?: {
+    url: string;
+    height: number;
+    width: number;
+  };
 }
 
 export async function GET(request: NextRequest) {

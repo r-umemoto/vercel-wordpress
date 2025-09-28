@@ -5,6 +5,7 @@ import type { Property } from "./api/blogs/route";
 import SideMenu, { type SearchCriteria } from "../components/SideMenu";
 import Spinner from "../components/Spinner";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 const PropertyDetailPanel = dynamic(() => import("../components/PropertyDetailPanel"), { ssr: false });
 
@@ -186,10 +187,22 @@ export default function Home() {
                           e.preventDefault();
                           handlePropertyClick(property.id);
                         }}
-                        className="block p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+                        className="flex items-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
                       >
-                        <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{property.title}</h3>
-                        {property.description && <p className="text-gray-700 dark:text-gray-400">{property.description}</p>}
+                        <div className="flex-shrink-0 mr-4">
+                          <Image
+                            src={property.thumbnail?.url || 'https://images.microcms-assets.io/assets/159949694f6a490ea709fe5e4d26ba06/6f9155fe0bce45248d40dc8f2bcb35f7/sample_no_img.png'}
+                            alt={property.title}
+                            width={property.thumbnail?.width || 80}
+                            height={property.thumbnail?.height || 80}
+                            className="rounded-md object-cover"
+                            style={{ width: 80, height: 80 }} // Keep a consistent size
+                          />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{property.title}</h3>
+                          {property.description && <p className="text-gray-700 dark:text-gray-400">{property.description}</p>}
+                        </div>
                       </a>
                     ))}
                   </div>
