@@ -65,7 +65,7 @@ export default function PropertyDetailPanel({ property, isOpen, isLoading, onClo
 
       {/* Panel */}
       <div
-        className={`relative z-50 h-full w-full max-w-2xl bg-white dark:bg-gray-800 shadow-xl transition-transform duration-300 ease-in-out transform-gpu ml-auto ${
+        className={`relative z-50 h-full w-full max-w-2xl ${isLoading ? '' : 'bg-white dark:bg-gray-800'} shadow-xl transition-transform duration-300 ease-in-out transform-gpu ml-auto ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
