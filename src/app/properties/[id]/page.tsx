@@ -40,22 +40,22 @@ export default function PropertyDetail() {
   }, [params.id]);
 
   if (isLoading) {
-    return <div className="p-24 text-center">読み込み中...</div>;
+    return <div className="p-4 sm:p-8 md:p-12 lg:p-24 text-center">読み込み中...</div>;
   }
 
   if (error) {
-    return <div className="p-24 text-center text-red-500">{error}</div>;
+    return <div className="p-4 sm:p-8 md:p-12 lg:p-24 text-center text-red-500">{error}</div>;
   }
 
   if (!property) {
-    return <div className="p-24 text-center">物件が見つかりません。</div>;
+    return <div className="p-4 sm:p-8 md:p-12 lg:p-24 text-center">物件が見つかりません。</div>;
   }
 
   // Sanitize the HTML content before rendering
   const cleanContent = property.content ? DOMPurify.sanitize(property.content) : "";
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
+    <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-24">
       <div className="w-full max-w-2xl">
         <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
         <p className="text-gray-500 mb-8">公開日: {new Date(property.publishedAt).toLocaleDateString()}</p>

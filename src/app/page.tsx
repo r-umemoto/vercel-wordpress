@@ -93,14 +93,14 @@ export default function Home() {
         <span style={{ writingMode: 'vertical-rl' }}>詳細検索</span>
       </button>
 
-      <main className="flex min-h-screen flex-col items-center p-24">
+      <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-24">
         <div className="w-full max-w-2xl">
           <h1 className="text-4xl font-bold text-center mb-12">物件検索</h1>
           
           <div className="flex flex-col gap-8 items-center w-full">
             {/* Simple Search Form */}
             <form
-              className="flex w-full justify-center gap-2"
+              className="flex flex-col sm:flex-row w-full justify-center gap-2"
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSimpleSearch();
@@ -111,7 +111,7 @@ export default function Home() {
                 value={simpleQuery}
                 onChange={(e) => setSimpleQuery(e.target.value)}
                 placeholder="キーワードを入力 (全項目対象)"
-                className="border border-gray-300 rounded-full px-4 py-2 w-full max-w-sm text-black"
+                className="border border-gray-300 rounded-full px-4 py-2 w-full sm:max-w-sm text-black"
               />
               <button
                 type="submit"
