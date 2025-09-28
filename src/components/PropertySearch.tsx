@@ -142,7 +142,7 @@ export default function PropertySearch({ initialProperties, initialTotalCount }:
 
       <main className="flex min-h-screen flex-col items-center py-4 pr-4 pl-8 sm:p-8 md:p-12 lg:p-24">
         <div className="w-full max-w-2xl">
-          <h1 className="text-4xl font-bold text-center mb-12">物件検索</h1>
+          <h1 className="text-4xl font-bold text-center mb-12">サンプル物件検索</h1>
           
           <div className="flex flex-col gap-8 items-center w-full">
             {/* Simple Search Form */}
