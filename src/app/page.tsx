@@ -87,10 +87,10 @@ export default function Home() {
       {/* New Detailed Search Trigger Button */}
       <button
         onClick={() => setIsMenuOpen(true)}
-        className="fixed top-1/2 -translate-y-1/2 left-0 z-30 bg-orange-500 text-white py-4 px-1 rounded-r-lg cursor-pointer hover:bg-orange-600 shadow-lg break-words"
+        className="fixed top-1/2 -translate-y-1/2 left-0 z-30 bg-orange-500 text-white py-6 px-2 rounded-r-lg cursor-pointer hover:bg-orange-600 shadow-lg flex items-center justify-center"
         aria-label="詳細検索を開く"
       >
-        <span style={{ writingMode: 'vertical-rl' }} className="whitespace-nowrap">詳細検索</span>
+        <span style={{ writingMode: 'vertical-rl' }}>詳細検索</span>
       </button>
 
       <main className="flex min-h-screen flex-col items-center py-4 pr-4 pl-8 sm:p-8 md:p-12 lg:p-24">
