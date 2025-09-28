@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   if (publishedAt) detailFilters.push(`publishedAt[greater_than]${publishedAt}`);
 
   if (detailFilters.length > 0) {
-    queries.filters = detailFilters.join('[or]');
+    queries.filters = detailFilters.join('[and]');
   } else if (q) {
     // Fallback to simple full-text search
     queries.q = q;
