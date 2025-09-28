@@ -36,6 +36,10 @@ export default function PropertyDetailPanel({ property, isOpen, isLoading, onClo
           </button>
         </div>
         <p className="text-gray-500 mb-8">公開日: {new Date(property.publishedAt).toLocaleDateString()}</p>
+        {property.description && (
+          <p className="text-lg text-gray-600 my-4">{property.description}</p>
+        )}
+
         
         {cleanContent && (
           <div 

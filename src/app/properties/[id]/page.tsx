@@ -1,70 +1,57 @@
-'use client';
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import type { Property } from "../../api/blogs/route";
+import { notFound } from "next/navigation";
+import { client } from "@/lib/microcms";
+import type { Property } from "@/app/api/blogs/route";
 import DOMPurify from "isomorphic-dompurify";
-import Spinner from "../../../components/Spinner";
 
-export default function PropertyDetail() {
-  const [property, setProperty] = useState<Property | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const params = useParams();
+// ISR: ページの再生成時間を60秒に設定
+export const revalidate = 60;
 
-  useEffect(() => {
-    const fetchProperty = async () => {
-      const id = params.id;
-      if (!id) {
-        setError("物件IDが見つかりません。");
-        setIsLoading(false);
-        return;
-      }
+type Props = {
+  params: {
+    id: string;
+  };
+};
 
-      try {
-        const res = await fetch(`/api/blogs/${id}`);
-        if (!res.ok) {
-          throw new Error("物件の詳細の取得に失敗しました。");
-        }
-        const data = await res.json();
-        setProperty(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An unknown error occurred");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+/**
+ * 物件詳細ページ (サーバーコンポーネント)
+ * ISR対応により、初回アクセス時に静的ページを生成し、
+ * 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
+ */
+export default async function PropertyDetail({ params }: Props) {
+  const { id } = params;
+  let property: Property;
 
-    if (params.id) {
-      fetchProperty();
-    }
-  }, [params.id]);
-
-  if (isLoading) {
-    return <Spinner />;
+  try {
+    // サーバーサイドでmicroCMSから直接データを取得
+    property = await client.get<Property>({
+      endpoint: "blog",
+      contentId: id,
+    });
+  } catch (error) {
+    // データ取得に失敗した場合は404ページを表示
+    notFound();
   }
 
-  if (error) {
-    return <div className="p-4 sm:p-8 md:p-12 lg:p-24 text-center text-red-500">{error}</div>;
-  }
-
-  if (!property) {
-    return <div className="p-4 sm:p-8 md:p-12 lg:p-24 text-center">物件が見つかりません。</div>;
-  }
-
-  // Sanitize the HTML content before rendering
-  const cleanContent = property.content ? DOMPurify.sanitize(property.content) : "";
+  // サーバーサイドでHTMLをサニタイズ
+  const cleanContent = property.content
+    ? DOMPurify.sanitize(property.content)
+    : "";
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-24">
       <div className="w-full max-w-2xl">
         <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
-        <p className="text-gray-500 mb-8">公開日: {new Date(property.publishedAt).toLocaleDateString()}</p>
-        
+        {property.description && (
+          <p className="text-lg text-gray-600 my-4">{property.description}</p>
+        )}
+        <p className="text-gray-500 mb-8">
+          公開日: {new Date(property.publishedAt).toLocaleDateString()}
+        </p>
+
         {cleanContent && (
-          <div 
+          <div
             className="prose dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: cleanContent }} 
+            dangerouslySetInnerHTML={{ __html: cleanContent }}
           />
         )}
       </div>
