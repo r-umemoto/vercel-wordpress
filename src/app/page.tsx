@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Property } from "./api/blogs/route";
 import SideMenu, { type SearchCriteria } from "../components/SideMenu";
 import PropertyDetailPanel from "../components/PropertyDetailPanel";
+import Spinner from "../components/Spinner";
 
 const LIMIT = 10;
 
@@ -161,7 +162,7 @@ export default function Home() {
             </form>
 
             {error && <p className="text-red-500 mt-4">{error}</p>}
-            {isLoading && <p className="mt-4">検索中...</p>}
+            {isLoading && <Spinner />}
             
             {/* Results */}
             <div className="w-full">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { Property } from "../../api/blogs/route";
 import DOMPurify from "isomorphic-dompurify";
+import Spinner from "../../../components/Spinner";
 
 export default function PropertyDetail() {
   const [property, setProperty] = useState<Property | null>(null);
@@ -40,7 +41,7 @@ export default function PropertyDetail() {
   }, [params.id]);
 
   if (isLoading) {
-    return <div className="p-4 sm:p-8 md:p-12 lg:p-24 text-center">読み込み中...</div>;
+    return <Spinner />;
   }
 
   if (error) {

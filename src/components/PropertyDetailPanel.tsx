@@ -2,6 +2,7 @@
 
 import type { Property } from "../app/api/blogs/route";
 import DOMPurify from "isomorphic-dompurify";
+import Spinner from "./Spinner";
 
 type Props = {
   property: Property | null;
@@ -13,7 +14,7 @@ type Props = {
 export default function PropertyDetailPanel({ property, isOpen, isLoading, onClose }: Props) {
   const renderContent = () => {
     if (isLoading) {
-      return <div className="p-6 text-center">読み込み中...</div>;
+      return <Spinner />;
     }
 
     if (!property) {
