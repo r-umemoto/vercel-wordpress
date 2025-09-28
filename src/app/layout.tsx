@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "物件検索 (サンプル) | Vercel WordPress不動産",
-    template: "%s | Vercel WordPress不動産 (サンプル)",
+    default: "RUサンプル物件検索  | RU不動産",
+    template: "%s | RU不動産 (サンプル)",
   },
-  description: "【サンプルプロジェクト】Vercel WordPress不動産で理想の物件を見つけましょう。最新の物件情報をリアルタイムで検索できます。",
+  description: "【サンプルプロジェクト】RU不動産で理想の物件を見つけましょう。最新の物件情報をリアルタイムで検索できます。",
 };
 
 export default function RootLayout({
