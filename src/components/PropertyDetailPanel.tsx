@@ -14,7 +14,11 @@ type Props = {
 export default function PropertyDetailPanel({ property, isOpen, isLoading, onClose }: Props) {
   const renderContent = () => {
     if (isLoading) {
-      return <Spinner fullscreen={false} />;
+      return (
+        <div className="flex justify-center items-center h-full">
+          <Spinner fullscreen={false} />
+        </div>
+      );
     }
 
     if (!property) {
