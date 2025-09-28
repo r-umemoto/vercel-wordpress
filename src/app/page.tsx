@@ -1,11 +1,11 @@
 import { client } from "@/lib/microcms";
 import type { Property } from "./api/blogs/route";
 import PropertySearch from "../components/PropertySearch";
-import { ListResponse } from "microcms-js-sdk";
+import { type MicroCMSListResponse } from "microcms-js-sdk";
 
 const LIMIT = 10;
 
-async function getInitialProperties(): Promise<ListResponse<Property>> {
+async function getInitialProperties(): Promise<MicroCMSListResponse<Property>> {
   try {
     const data = await client.getList<Property>({
       endpoint: "blog",
