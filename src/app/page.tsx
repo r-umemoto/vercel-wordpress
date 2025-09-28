@@ -111,7 +111,7 @@ export default function Home() {
                 value={simpleQuery}
                 onChange={(e) => setSimpleQuery(e.target.value)}
                 placeholder="キーワードを入力 (全項目対象)"
-                className="border border-gray-300 rounded-full px-4 py-2 w-full sm:max-w-sm text-black"
+                className="border border-gray-300 bg-white rounded-full px-4 py-2 w-full sm:max-w-sm text-black dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               <button
                 type="submit"
