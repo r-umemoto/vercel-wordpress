@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from "react";
-import Link from "next/link";
 import type { Property } from "./api/blogs/route";
 import SideMenu, { type SearchCriteria } from "../components/SideMenu";
+import PropertyDetailPanel from "../components/PropertyDetailPanel";
 
 const LIMIT = 10;
 
@@ -24,6 +24,11 @@ export default function Home() {
 
   // State to hold the params for the current active search (for pagination)
   const [currentParams, setCurrentParams] = useState<SearchParams>({});
+
+  // State for detail panel
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [isPanelLoading, setIsPanelLoading] = useState(false);
 
   const searchProperties = async (params: SearchParams, newOffset: number) => {
     setIsLoading(true);
@@ -76,12 +81,45 @@ export default function Home() {
     }
   };
 
+  const handlePropertyClick = async (id: string) => {
+    setIsPanelLoading(true);
+    setSelectedProperty(null);
+    setIsPanelOpen(true);
+    try {
+      const res = await fetch(`/api/blogs/${id}`);
+      if (!res.ok) {
+        throw new Error("物件の詳細の取得に失敗しました。");
+      }
+      const data = await res.json();
+      setSelectedProperty(data);
+    } catch (err) {
+      console.error(err);
+      // Close panel and show error?
+      handleClosePanel();
+      setError(err instanceof Error ? err.message : "An unknown error occurred");
+    } finally {
+      setIsPanelLoading(false);
+    }
+  };
+
+  const handleClosePanel = () => {
+    setIsPanelOpen(false);
+    setSelectedProperty(null);
+  };
+
   return (
     <>
       <SideMenu 
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         onSearch={handleDetailedSearch}
+      />
+
+      <PropertyDetailPanel
+        isOpen={isPanelOpen}
+        isLoading={isPanelLoading}
+        property={selectedProperty}
+        onClose={handleClosePanel}
       />
 
       {/* New Detailed Search Trigger Button */}
@@ -138,10 +176,14 @@ export default function Home() {
                   </h2>
                   <div className="mt-6 space-y-4">
                     {properties.map((property) => (
-                      <Link href={`/properties/${property.id}`} key={property.id} className="block p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                      <div 
+                        key={property.id} 
+                        onClick={() => handlePropertyClick(property.id)}
+                        className="block p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+                      >
                         <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{property.title}</h3>
                         {property.description && <p className="text-gray-700 dark:text-gray-400">{property.description}</p>}
-                      </Link>
+                      </div>
                     ))}
                   </div>
                   
