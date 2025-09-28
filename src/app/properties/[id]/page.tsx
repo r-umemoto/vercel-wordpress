@@ -3,6 +3,7 @@ import { client } from "@/lib/microcms";
 import type { Property } from "@/app/api/blogs/route";
 import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
+import { Metadata } from "next";
 
 // ISR: ページの再生成時間を60秒に設定
 export const revalidate = 60;
@@ -13,7 +14,27 @@ type Props = {
   };
 };
 
-/**
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = params;
+  let property: Property;
+
+  try {
+    property = await client.get<Property>({
+      endpoint: "blog",
+      contentId: id,
+    });
+  } catch (error) {
+    notFound();
+  }
+
+  return {
+    title: property.title,
+    description: property.description,
+  };
+}
+
+
+ /**
  * 物件詳細ページ (サーバーコンポーネント)
  * ISR対応により、初回アクセス時に静的ページを生成し、
  * 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
