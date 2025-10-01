@@ -1,6 +1,6 @@
 import { client } from "@/lib/microcms";
 import type { Property } from "./api/blogs/route";
-import PropertySearch from "../components/PropertySearch";
+import PropertySearch from "@/components/PropertySearch";
 import { type MicroCMSListResponse } from "microcms-js-sdk";
 
 const LIMIT = 10;

@@ -1,4 +1,3 @@
-// This layout applies only to the /map route
 export default function MapLayout({
   children,
 }: {
