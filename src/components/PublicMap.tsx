@@ -1,7 +1,7 @@
 "use client";
 
 import { Autocomplete } from "@react-google-maps/api";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import BaseMap from "./BaseMap";
 
 interface SelectedLocation {
@@ -19,6 +19,27 @@ const PublicMap = () => {
     useState<SelectedLocation | null>(null);
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const newLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setCenter(newLocation);
+          setMarkerPosition(newLocation);
+          setZoom(15);
+        },
+        () => {
+          console.error("Error: The Geolocation service failed.");
+        }
+      );
+    } else {
+      console.error("Error: Your browser doesn't support geolocation.");
+    }
+  }, []);
 
   const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
     setAutocomplete(autocomplete);
