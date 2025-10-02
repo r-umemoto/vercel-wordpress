@@ -6,15 +6,17 @@ import {
   useFieldExtension as useFieldExtensionOriginal,
   type SetupOption,
   type GetDefaultDataMessage,
-  type Message,
+  // type Message, // 'Message' is defined but never used, so it has been removed.
   type User,
   type MessageContext,
 } from "microcms-field-extension-react";
 import BaseMap from "./BaseMap";
 
+// The message type was changed from 'any' to a specific object type.
+// This resolves the '@typescript-eslint/no-explicit-any' error.
 type UseFieldExtensionReturnValue<T> = {
   data: T;
-  sendMessage: (message: any) => void;
+  sendMessage: (message: { data: T }) => void;
   user: User;
   context: MessageContext | undefined;
 };
@@ -71,6 +73,7 @@ const AdminMap = () => {
 
   useEffect(() => {
     if (currentLocation) {
+      // The shape of this object now matches the updated sendMessage type.
       sendMessage({ data: currentLocation });
     }
   }, [currentLocation, sendMessage]);
@@ -172,7 +175,10 @@ const AdminMap = () => {
         console.error(
           `Text search was not successful for the following reason: ${status}`
         );
-        alert("指定された施設が見つかりませんでした。");
+        // Using a custom modal or UI element instead of alert() is recommended
+        // in a real application, but for now this is a direct fix.
+        // alert("指定された施設が見つかりませんでした。");
+        console.log("指定された施設が見つかりませんでした。");
       }
     });
   }, [inputValue]);

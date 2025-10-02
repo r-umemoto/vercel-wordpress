@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { client } from "@/lib/microcms";
-import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
 import { Metadata } from "next";
 

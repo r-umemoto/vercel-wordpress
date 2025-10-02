@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       endpoint: "parks",
       contentId: id,
     });
-  } catch (error) {
+  } catch () {
     notFound();
   }
 
@@ -34,11 +34,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 
- /**
- * 公園詳細ページ (サーバーコンポーネント)
- * ISR対応により、初回アクセス時に静的ページを生成し、
- * 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
- */
+/**
+* 公園詳細ページ (サーバーコンポーネント)
+* ISR対応により、初回アクセス時に静的ページを生成し、
+* 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
+*/
 export default async function ParkDetail({ params }: Props) {
   const { id } = params;
   let park: Park;
