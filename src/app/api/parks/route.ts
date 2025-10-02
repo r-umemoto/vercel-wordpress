@@ -6,7 +6,6 @@ import { client } from "@/lib/microcms";
 export interface Park {
   id: string;
   name: string;
-  publishedAt: string;
   description?: string;
   content?: string;
   thumbnail?: {

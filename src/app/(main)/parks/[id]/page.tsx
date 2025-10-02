@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: park.title,
+    title: park.name,
     description: park.description,
   };
 }
@@ -62,13 +62,10 @@ export default async function ParkDetail({ params }: Props) {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-24 pb-20">
       <div className="w-full max-w-2xl">
-        <h1 className="text-4xl font-bold mb-4">{park.title}</h1>
+        <h1 className="text-4xl font-bold mb-4">{park.name}</h1>
         {park.description && (
           <p className="text-lg text-gray-600 my-4">{park.description}</p>
         )}
-        <p className="text-gray-500 mb-8">
-          公開日: {new Date(park.publishedAt).toLocaleDateString()}
-        </p>
 
         {cleanContent && (
           <div
