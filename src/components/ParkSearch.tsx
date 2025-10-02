@@ -149,6 +149,30 @@ export default function ParkSearch({}: ParkSearchProps) {
                 </div>
               )}
             </div>
+
+            {/* Other ways to search */}
+            <div className="w-full mt-16">
+              <h2 className="text-2xl font-bold text-center mb-8">他の方法で探す</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Card 1: Map */}
+                <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer">
+                  <Image src="/globe.svg" alt="Map Icon" width={48} height={48} />
+                  <h3 className="mt-4 text-lg font-semibold">地図から探す</h3>
+                </div>
+
+                {/* Card 2: Address */}
+                <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer">
+                  <Image src="/file.svg" alt="Address Icon" width={48} height={48} />
+                  <h3 className="mt-4 text-lg font-semibold">住所から探す</h3>
+                </div>
+
+                {/* Card 3: Jobs */}
+                <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer">
+                  <Image src="/window.svg" alt="Jobs Icon" width={48} height={48} />
+                  <h3 className="mt-4 text-lg font-semibold">求人</h3>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
