@@ -11,6 +11,7 @@ interface BaseMapProps {
   onMapClick?: (e: google.maps.MapMouseEvent) => void;
   children?: React.ReactNode;
   mapContainerStyle?: React.CSSProperties;
+  wrapperStyle?: React.CSSProperties; // New prop
 }
 
 const BaseMap = ({
@@ -20,6 +21,7 @@ const BaseMap = ({
   onMapClick,
   children,
   mapContainerStyle,
+  wrapperStyle, // New prop
 }: BaseMapProps) => {
   const [libraries] = useState<("places")[]>(["places"]);
   const { isLoaded } = useJsApiLoader({
@@ -29,7 +31,7 @@ const BaseMap = ({
     language: "ja",
   });
 
-  const defaultContainerStyle = useMemo(
+  const defaultMapContainerStyle = useMemo(
     () => ({
       width: "100%",
       height: "100%",
@@ -37,14 +39,20 @@ const BaseMap = ({
     []
   );
 
+  const defaultWrapperStyle = {
+    position: "relative" as const,
+    width: "100%",
+    height: "600px",
+  };
+
   if (!isLoaded) {
     return <Spinner />;
   }
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div style={wrapperStyle || defaultWrapperStyle}>
       <GoogleMap
-        mapContainerStyle={mapContainerStyle || defaultContainerStyle}
+        mapContainerStyle={mapContainerStyle || defaultMapContainerStyle}
         center={center}
         zoom={zoom}
         onClick={onMapClick}

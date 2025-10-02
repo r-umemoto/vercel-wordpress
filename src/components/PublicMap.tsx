@@ -84,6 +84,7 @@ const PublicMap = () => {
       zoom={zoom}
       markerPosition={markerPosition}
       onMapClick={handleMapClick}
+      wrapperStyle={{ position: "relative", width: "100%", height: "100%" }}
     >
       <div
         style={{
