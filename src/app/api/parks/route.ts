@@ -5,7 +5,7 @@ import { client } from "@/lib/microcms";
 // 公園の型定義
 export interface Park {
   id: string;
-  title: string;
+  name: string;
   publishedAt: string;
   description?: string;
   content?: string;

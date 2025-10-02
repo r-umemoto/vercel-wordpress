@@ -160,7 +160,7 @@ export default function ParkSearch({ initialParks, initialTotalCount = 0 }: Park
                                     <div className="flex-shrink-0 mr-4">
                                       <Image
                                         src={park.thumbnail?.url || 'https://images.microcms-assets.io/assets/159949694f6a490ea709fe5e4d26ba06/6f9155fe0bce45248d40dc8f2bcb35f7/sample_no_img.png'}
-                                        alt={park.title}
+                                        alt={park.name}
                                         width={park.thumbnail?.width || 80}
                                         height={park.thumbnail?.height || 80}
                                         className="rounded-md object-cover"
@@ -168,7 +168,7 @@ export default function ParkSearch({ initialParks, initialTotalCount = 0 }: Park
                                       />
                                     </div>
                                     <div>
-                                      <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{park.title}</h3>
+                                      <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{park.name}</h3>
                                       {park.description && <p className="text-gray-700 dark:text-gray-400">{park.description}</p>}
                                     </div>
                                   </a>

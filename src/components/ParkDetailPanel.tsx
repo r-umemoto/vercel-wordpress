@@ -30,7 +30,7 @@ export default function ParkDetailPanel({ park, isOpen, isLoading, onClose }: Pr
     return (
       <div className="p-6 h-full overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">{park.title}</h2>
+          <h2 className="text-3xl font-bold">{park.name}</h2>
           <button 
             onClick={onClose} 
             className="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
