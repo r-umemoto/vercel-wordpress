@@ -6,8 +6,8 @@ import {
   useFieldExtension as useFieldExtensionOriginal,
   type SetupOption,
   type GetDefaultDataMessage,
-  // type Message, // 'Message' is defined but never used, so it has been removed.
-  type User,
+  // 'Message' is defined but never used, so it has been removed.
+  type User as MicroCMSUser, // ★ 修正点1: User型に 'MicroCMSUser' という別名を付けます
   type MessageContext,
 } from "microcms-field-extension-react";
 import BaseMap from "./BaseMap";
@@ -17,7 +17,7 @@ import BaseMap from "./BaseMap";
 type UseFieldExtensionReturnValue<T> = {
   data: T;
   sendMessage: (message: { data: T }) => void;
-  user: User;
+  user: MicroCMSUser; // ★ 修正点2: 別名を型として使用します
   context: MessageContext | undefined;
 };
 
@@ -175,9 +175,6 @@ const AdminMap = () => {
         console.error(
           `Text search was not successful for the following reason: ${status}`
         );
-        // Using a custom modal or UI element instead of alert() is recommended
-        // in a real application, but for now this is a direct fix.
-        // alert("指定された施設が見つかりませんでした。");
         console.log("指定された施設が見つかりませんでした。");
       }
     });
