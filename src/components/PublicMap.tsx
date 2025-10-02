@@ -29,7 +29,7 @@ export interface Park {
 
 const PublicMap = () => {
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 });
-  const [zoom, setZoom] = useState(12);
+  const [zoom, setZoom] = useState(10);
   const [markerPosition, setMarkerPosition] =
     useState<google.maps.LatLngLiteral | null>(null);
   const [selectedLocation, setSelectedLocation] =
@@ -91,7 +91,7 @@ const PublicMap = () => {
           };
           setCenter(newLocation);
           setMarkerPosition(newLocation);
-          setZoom(15);
+          setZoom(10);
           findAndSetNearbyParks(newLocation);
         },
         () => {
@@ -219,7 +219,10 @@ const PublicMap = () => {
                   whiteSpace: "nowrap",
                   cursor: "pointer",
                 }}
-                onClick={() => handleParkClick(park.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleParkClick(park.id);
+                }}
               >
                 {park.name}
               </div>

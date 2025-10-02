@@ -1,6 +1,7 @@
 'use client';
 
 import type { Park } from "../app/api/parks/route";
+import Image from "next/image";
 import DOMPurify from "isomorphic-dompurify";
 import Spinner from "./Spinner";
 
@@ -39,8 +40,21 @@ export default function ParkDetailPanel({ park, isOpen, isLoading, onClose }: Pr
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
+        {park.thumbnail && (
+          <div className="relative w-full h-64 mb-4">
+            <Image
+              src={park.thumbnail.url}
+              alt={park.name}
+              fill
+              className="object-cover rounded-lg"
+            />
+          </div>
+        )}
         {park.description && (
           <p className="text-lg text-gray-600 my-4">{park.description}</p>
+        )}
+        {park.map?.address && (
+          <p className="text-md text-gray-500 my-4">{park.map.address}</p>
         )}
 
         
