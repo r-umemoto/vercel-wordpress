@@ -61,7 +61,7 @@ export default function SideMenu({ isOpen, onClose, onSearch }: Props) {
             className="space-y-4"
           >
             <div>
-              <label htmlFor="title" className="block text-sm font-medium">物件名</label>
+              <label htmlFor="title" className="block text-sm font-medium">公園名</label>
               <input
                 type="text"
                 id="title"
