@@ -21,21 +21,15 @@ export const metadata: Metadata = {
   description: "【サンプルプロジェクト】RU不動産で理想の物件を見つけましょう。最新の物件情報をリアルタイムで検索できます。",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ 
+    children,
+ }: Readonly<{ 
+    children: React.ReactNode; 
+ }>) {
   return (
-    <html lang="en">
-      <head>
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <>
         <Header />
         <main>{children}</main>
-      </body>
-    </html>
+    </>
   );
 }
