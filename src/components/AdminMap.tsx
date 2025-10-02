@@ -2,30 +2,8 @@
 
 import { Autocomplete } from "@react-google-maps/api";
 import { useState, useEffect, useCallback } from "react";
-// ★ 修正点1: ライブラリ全体を 'MicroCMS' という名前でインポートします
-import * as MicroCMS from "microcms-field-extension-react";
+import { useFieldExtension } from "microcms-field-extension-react";
 import BaseMap from "./BaseMap";
-
-// The message type was changed from 'any' to a specific object type.
-// This resolves the '@typescript-eslint/no-explicit-any' error.
-// ★ 修正点2: MicroCMSオブジェクトからドットで型にアクセスします
-type UseFieldExtensionReturnValue<T> = {
-  data: T;
-  sendMessage: (message: { data: T }) => void;
-  user: MicroCMS.User;
-  context: MicroCMS.MessageContext | undefined;
-};
-
-// ★ 修正点3: ここも同様に修正します
-type UseFieldExtension = <T>(
-  initialState: T,
-  option: MicroCMS.SetupOption & {
-    onDefaultData?: (message: MicroCMS.GetDefaultDataMessage) => void;
-  }
-) => UseFieldExtensionReturnValue<T>;
-
-const useFieldExtension =
-  MicroCMS.useFieldExtension as unknown as UseFieldExtension;
 
 interface SelectedLocation {
   lat: number;
@@ -34,9 +12,7 @@ interface SelectedLocation {
 }
 
 const AdminMap = () => {
-  const { data, sendMessage } = useFieldExtension<
-    { lat: number; lng: number; address: string } | undefined
-  >(undefined, {
+  const { data, sendMessage } = useFieldExtension<SelectedLocation | null>(null, {
     origin: `https://${process.env.NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN}.microcms.io`,
     height: 600,
     width: "100%",
