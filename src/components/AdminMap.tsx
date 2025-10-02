@@ -13,8 +13,8 @@ interface SelectedLocation {
 
 const AdminMap = () => {
   const { data, sendMessage } = useFieldExtension<
-    { lat: number; lng: number; address: string } | undefined
-  >(undefined, {
+    { lat: number; lng: number; address: string } | null
+  >(null, {
     origin: `https://${process.env.NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN}.microcms.io`,
     height: 600,
     width: "100%",
