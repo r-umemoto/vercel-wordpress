@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // 1. /map ページへのリクエストでなければ何もしない
-  if (request.nextUrl.pathname !== '/map') {
+  if (request.nextUrl.pathname !== '/map/microcms') {
     return NextResponse.next();
   }
 
