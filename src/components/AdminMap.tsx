@@ -14,7 +14,7 @@ import BaseMap from "./BaseMap";
 
 type UseFieldExtensionReturnValue<T> = {
   data: T;
-  sendMessage: (message: Message) => void;
+  sendMessage: (message: any) => void;
   user: User;
   context: MessageContext | undefined;
 };
