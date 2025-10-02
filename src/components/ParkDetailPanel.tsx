@@ -32,8 +32,8 @@ export default function ParkDetailPanel({ park, isOpen, isLoading, onClose }: Pr
       <div className="p-6 h-full overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold">{park.name}</h2>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
             aria-label="閉じる"
           >
@@ -57,11 +57,11 @@ export default function ParkDetailPanel({ park, isOpen, isLoading, onClose }: Pr
           <p className="text-md text-gray-500 my-4">{park.map.address}</p>
         )}
 
-        
+
         {cleanContent && (
-          <div 
+          <div
             className="prose dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: cleanContent }} 
+            dangerouslySetInnerHTML={{ __html: cleanContent }}
           />
         )}
       </div>
@@ -70,9 +70,8 @@ export default function ParkDetailPanel({ park, isOpen, isLoading, onClose }: Pr
 
   return (
     <div
-      className={`fixed inset-0 z-40 transition-opacity duration-300 ${
-        isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-40 transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
     >
       {/* Overlay */}
       <div
@@ -82,9 +81,8 @@ export default function ParkDetailPanel({ park, isOpen, isLoading, onClose }: Pr
 
       {/* Panel */}
       <div
-        className={`relative z-50 bg-white dark:bg-gray-800 shadow-xl rounded-lg w-11/12 max-w-lg top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out ${
-          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
-        }`}
+        className={`relative z-50 bg-white dark:bg-gray-800 shadow-xl rounded-lg w-11/12 max-w-lg top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
+          }`}
       >
         {renderContent()}
       </div>
