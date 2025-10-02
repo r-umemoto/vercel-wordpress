@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { Park } from "../app/api/parks/route";
-import SideMenu, { type SearchCriteria } from "./SideMenu";
 import Spinner from "./Spinner";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -11,7 +10,7 @@ const ParkDetailPanel = dynamic(() => import("./ParkDetailPanel"), { ssr: false 
 
 const LIMIT = 10;
 
-type SearchParams = { q?: string } & Partial<SearchCriteria>;
+type SearchParams = { q?: string };
 
 interface ParkSearchProps {
   initialParks: Park[];
@@ -27,9 +26,6 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
   
   // State for simple search
   const [simpleQuery, setSimpleQuery] = useState("");
-
-  // State for detailed search menu
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // State to hold the params for the current active search (for pagination)
   const [currentParams, setCurrentParams] = useState<SearchParams>({});
@@ -74,10 +70,6 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
     searchParks({ q: simpleQuery }, 0);
   };
 
-  const handleDetailedSearch = (criteria: SearchCriteria) => {
-    searchParks(criteria, 0);
-  };
-
   const handlePrevPage = () => {
     if (offset > 0) {
       searchParks(currentParams, offset - LIMIT);
@@ -118,27 +110,12 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
 
   return (
     <>
-      <SideMenu 
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
-        onSearch={handleDetailedSearch}
-      />
-
       <ParkDetailPanel
         isOpen={isPanelOpen}
         isLoading={isPanelLoading}
         park={selectedPark}
         onClose={handleClosePanel}
       />
-
-      {/* New Detailed Search Trigger Button */}
-      <button
-        onClick={() => setIsMenuOpen(true)}
-        className="fixed top-1/2 -translate-y-1/2 left-0 z-30 bg-orange-500/50 text-white py-6 px-2 rounded-r-lg cursor-pointer hover:bg-orange-600 active:bg-orange-600 shadow-lg flex items-center justify-center"
-        aria-label="詳細検索を開く"
-      >
-        <span style={{ writingMode: 'vertical-rl' }}>詳細検索</span>
-      </button>
 
       <main className="flex min-h-screen flex-col items-center py-4 pr-4 pl-8 sm:p-8 md:p-12 lg:p-24">
         <div className="w-full max-w-2xl">

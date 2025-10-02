@@ -23,28 +23,12 @@ export async function GET(request: NextRequest) {
   const limit = searchParams.get('limit');
   const offset = searchParams.get('offset');
 
-  // Detailed search fields
-  const title = searchParams.get('title');
-  const description = searchParams.get('description');
-  const content = searchParams.get('content');
-  const publishedAt = searchParams.get('publishedAt');
-
   // Simple search field
   const q = searchParams.get('q');
 
   const queries: MicroCMSQueries = {};
 
-  // Build filters for detailed search
-  const detailFilters: string[] = [];
-  if (title) detailFilters.push(`title[contains]${title}`);
-  if (description) detailFilters.push(`description[contains]${description}`);
-  if (content) detailFilters.push(`content[contains]${content}`);
-  if (publishedAt) detailFilters.push(`publishedAt[greater_than]${publishedAt}`);
-
-  if (detailFilters.length > 0) {
-    queries.filters = detailFilters.join('[and]');
-  } else if (q) {
-    // Fallback to simple full-text search
+  if (q) {
     queries.q = q;
   }
 
