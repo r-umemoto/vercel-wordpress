@@ -49,7 +49,7 @@ export default async function PropertyDetail({ params }: Props) {
       endpoint: "blog",
       contentId: id,
     });
-  } catch (error) {
+  } catch (_error) {
     // データ取得に失敗した場合は404ページを表示
     notFound();
   }
