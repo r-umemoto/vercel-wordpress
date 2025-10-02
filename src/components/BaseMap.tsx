@@ -42,7 +42,7 @@ const BaseMap = ({
   }
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "600px" }}>
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <GoogleMap
         mapContainerStyle={mapContainerStyle || defaultContainerStyle}
         center={center}
