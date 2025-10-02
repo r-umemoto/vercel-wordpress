@@ -41,11 +41,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
- /**
- * 物件詳細ページ (サーバーコンポーネント)
- * ISR対応により、初回アクセス時に静的ページを生成し、
- * 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
- */
+/**
+* 物件詳細ページ (サーバーコンポーネント)
+* ISR対応により、初回アクセス時に静的ページを生成し、
+* 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
+*/
 export default async function PropertyDetail({ params }: Props) {
   const { id } = params;
   let property: Property;
@@ -61,27 +61,12 @@ export default async function PropertyDetail({ params }: Props) {
     notFound();
   }
 
-  // サーバーサイドでHTMLをサニタイズ
-  const cleanContent = property.content
-    ? DOMPurify.sanitize(property.content)
-    : "";
-
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-24 pb-20">
       <div className="w-full max-w-2xl">
         <h1 className="text-4xl font-bold mb-4">{property.name}</h1>
         {property.description && (
           <p className="text-lg text-gray-600 my-4">{property.description}</p>
-        )}
-        <p className="text-gray-500 mb-8">
-          公開日: {new Date(property.publishedAt).toLocaleDateString()}
-        </p>
-
-        {cleanContent && (
-          <div
-            className="prose dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: cleanContent }}
-          />
         )}
       </div>
       <footer className="fixed bottom-0 left-0 right-0 w-full bg-orange-500/50 p-4 text-center">
