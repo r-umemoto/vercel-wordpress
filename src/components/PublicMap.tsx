@@ -1,6 +1,7 @@
 import { Autocomplete, Marker, OverlayView } from "@react-google-maps/api";
 import { useState, useCallback, useEffect } from "react";
 import BaseMap from "./BaseMap";
+import ParkDetailPanel from "./ParkDetailPanel";
 
 interface SelectedLocation {
   lat: number;
@@ -36,6 +37,9 @@ const PublicMap = () => {
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
   const [parks, setParks] = useState<Park[]>([]);
+  const [selectedPark, setSelectedPark] = useState<Park | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isPanelLoading, setIsPanelLoading] = useState(false);
 
   const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
     const R = 6371; // Radius of the earth in km
@@ -159,87 +163,121 @@ const PublicMap = () => {
     });
   }, []);
 
+  const handleParkClick = async (id: string) => {
+    setIsPanelLoading(true);
+    setSelectedPark(null);
+    setIsPanelOpen(true);
+    try {
+      const res = await fetch(`/api/parks/${id}`);
+      if (!res.ok) {
+        throw new Error("公園の詳細の取得に失敗しました。");
+      }
+      const data = await res.json();
+      setSelectedPark(data);
+    } catch (err) {
+      console.error(err);
+      handleClosePanel();
+    } finally {
+      setIsPanelLoading(false);
+    }
+  };
+
+  const handleClosePanel = () => {
+    setIsPanelOpen(false);
+    setSelectedPark(null);
+  };
+
   return (
-    <BaseMap
-      center={center}
-      zoom={zoom}
-      markerPosition={markerPosition}
-      onMapClick={handleMapClick}
-      wrapperStyle={{ position: "relative", width: "100%", height: "100%" }}
-    >
-      {parks.map((park) => (
-        park.map && (
-          <OverlayView
-            key={park.id}
-            position={{ lat: park.map.lat, lng: park.map.lng }}
-            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-          >
-            <div
-              style={{
-                backgroundColor: "rgba(255, 255, 0, 0.7)",
-                padding: "8px 12px",
-                borderRadius: "3px",
-                color: "black",
-                fontSize: "20px",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {park.name}
-            </div>
-          </OverlayView>
-        )
-      ))}
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 1,
-        }}
+    <>
+      <ParkDetailPanel
+        isOpen={isPanelOpen}
+        isLoading={isPanelLoading}
+        park={selectedPark}
+        onClose={handleClosePanel}
+      />
+      <BaseMap
+        center={center}
+        zoom={zoom}
+        markerPosition={markerPosition}
+        onMapClick={handleMapClick}
+        wrapperStyle={{ position: "relative", width: "100%", height: "100%" }}
       >
-        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-          <input
-            type="text"
-            placeholder="場所を検索"
-            style={{
-              boxSizing: `border-box`,
-              border: `1px solid transparent`,
-              width: `240px`,
-              height: `32px`,
-              padding: `0 12px`,
-              borderRadius: `3px`,
-              boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-              fontSize: `14px`,
-              outline: `none`,
-              textOverflow: `ellipses`,
-              backgroundColor: "white",
-              color: "black",
-            }}
-          />
-        </Autocomplete>
-      </div>
-      {selectedLocation && (
+        {parks.map((park) => (
+          park.map && (
+            <OverlayView
+              key={park.id}
+              position={{ lat: park.map.lat, lng: park.map.lng }}
+              mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+            >
+              <div
+                style={{
+                  backgroundColor: "rgba(255, 255, 0, 0.7)",
+                  padding: "8px 12px",
+                  borderRadius: "3px",
+                  color: "black",
+                  fontSize: "20px",
+                  whiteSpace: "nowrap",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleParkClick(park.id)}
+              >
+                {park.name}
+              </div>
+            </OverlayView>
+          )
+        ))}
         <div
           style={{
             position: "absolute",
-            bottom: "20px",
-            left: "20px",
-            backgroundColor: "white",
-            padding: "10px",
-            borderRadius: "5px",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+            top: "10px",
+            left: "50%",
+            transform: "translateX(-50%)",
             zIndex: 1,
-            color: "black",
           }}
         >
-          <h3>選択中の地点</h3>
-          <p>緯度: {selectedLocation.lat}</p>
-          <p>経度: {selectedLocation.lng}</p>
-          <p>住所: {selectedLocation.address}</p>
+          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+            <input
+              type="text"
+              placeholder="場所を検索"
+              style={{
+                boxSizing: `border-box`,
+                border: `1px solid transparent`,
+                width: `240px`,
+                height: `32px`,
+                padding: `0 12px`,
+                borderRadius: `3px`,
+                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                fontSize: `14px`,
+                outline: `none`,
+                textOverflow: `ellipses`,
+                backgroundColor: "white",
+                color: "black",
+              }}
+            />
+          </Autocomplete>
         </div>
-      )}
-    </BaseMap>
+        {selectedLocation && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: "20px",
+              left: "20px",
+              backgroundColor: "white",
+              padding: "10px",
+              borderRadius: "5px",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+              zIndex: 1,
+              color: "black",
+            }}
+          >
+            <h3>選択中の地点</h3>
+            <p>緯度: {selectedLocation.lat}</p>
+            <p>経度: {selectedLocation.lng}</p>
+            <p>住所: {selectedLocation.address}</p>
+          </div>
+        )}
+      </BaseMap>
+    </>
   );
 };
 

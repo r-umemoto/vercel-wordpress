@@ -68,8 +68,8 @@ export default function ParkDetailPanel({ park, isOpen, isLoading, onClose }: Pr
 
       {/* Panel */}
       <div
-        className={`relative z-50 h-full w-full max-w-2xl bg-white dark:bg-gray-800 shadow-xl transition-transform duration-300 ease-in-out transform-gpu ml-auto ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={`relative z-50 bg-white dark:bg-gray-800 shadow-xl rounded-lg w-11/12 max-w-lg top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out ${
+          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
         }`}
       >
         {renderContent()}
