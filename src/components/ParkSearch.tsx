@@ -101,7 +101,7 @@ export default function ParkSearch({}: ParkSearchProps) {
       />
 
       <main className="flex min-h-screen flex-col items-center py-4 pr-4 pl-8 sm:p-8 md:p-12 lg:p-24">
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-5xl">
           <h1 className="text-4xl font-bold text-center mb-12">公園一覧</h1>
 
           <div className="flex flex-col gap-8 items-center w-full">
@@ -118,30 +118,30 @@ export default function ParkSearch({}: ParkSearchProps) {
             
               {parks.length > 0 && (
                 <div className="mt-8 w-full text-left">
-                  <div className="mt-6 space-y-4">
+                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {parks.map((park) => (
-                      <a 
-                        key={park.id} 
+                      <a
+                        key={park.id}
                         href={`/parks/${park.id}`}
                         onClick={(e) => {
                           e.preventDefault();
                           handleParkClick(park.id);
                         }}
-                        className="flex items-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+                        className="group flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer overflow-hidden"
                       >
-                        <div className="flex-shrink-0 mr-4">
+                        {/* Image container with aspect ratio */}
+                        <div className="relative w-full aspect-[5/7] overflow-hidden">
                           <Image
                             src={park.thumbnail?.url || 'https://images.microcms-assets.io/assets/159949694f6a490ea709fe5e4d26ba06/6f9155fe0bce45248d40dc8f2bcb35f7/sample_no_img.png'}
                             alt={park.name}
-                            width={park.thumbnail?.width || 80}
-                            height={park.thumbnail?.height || 80}
-                            className="rounded-md object-cover"
-                            style={{ width: 80, height: 80 }} // Keep a consistent size
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{park.name}</h3>
-                          {park.description && <p className="text-gray-700 dark:text-gray-400">{park.description}</p>}
+                        {/* Text content */}
+                        <div className="p-4">
+                          <h3 className="text-lg font-bold text-blue-600 dark:text-blue-400 mb-1 truncate">{park.name}</h3>
+                          {park.description && <p className="text-sm text-gray-600 dark:text-gray-400 h-[2.5rem] overflow-hidden">{park.description}</p>}
                         </div>
                       </a>
                     ))}
