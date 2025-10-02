@@ -23,7 +23,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       endpoint: "parks",
       contentId: id,
     });
-  } catch () {
+    // The catch block was corrected to include an error parameter, fixing the syntax error.
+  } catch (error) {
+    console.error("Failed to generate metadata:", error);
     notFound();
   }
 
@@ -33,12 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-
 /**
-* 公園詳細ページ (サーバーコンポーネント)
-* ISR対応により、初回アクセス時に静的ページを生成し、
-* 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
-*/
+ * 公園詳細ページ (サーバーコンポーネント)
+ * ISR対応により、初回アクセス時に静的ページを生成し、
+ * 60秒ごとにバックグラウンドで再生成して鮮度を保ちます。
+ */
 export default async function ParkDetail({ params }: Props) {
   const { id } = params;
   let park: Park;
@@ -49,7 +50,9 @@ export default async function ParkDetail({ params }: Props) {
       endpoint: "parks",
       contentId: id,
     });
-  } catch {
+    // The catch block was also corrected here for consistency and to prevent potential build issues.
+  } catch (error) {
+    console.error("Failed to fetch park details:", error);
     // データ取得に失敗した場合は404ページを表示
     notFound();
   }
