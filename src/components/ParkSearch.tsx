@@ -135,69 +135,48 @@ export default function ParkSearch({ initialParks, initialTotalCount = 0 }: Park
             {error && <p className="text-red-500 mt-4">{error}</p>}
             {isLoading && !error && <Spinner />}
 
-            {/* Results */}
-            <div className="w-full">
-              {!isLoading && totalCount === 0 && Object.keys(currentParams).length > 0 && (
-                <p className="mt-8 text-center">条件に合う公園は見つかりませんでした。</p>
-              )}
-
-              {totalCount > 0 && (
-                <div className="mt-8 w-full text-left">
-                  <h2 className="text-2xl font-bold border-b pb-2 mb-4">
-                    検索結果 ({totalCount}件)
-                  </h2>
-                  <div className="mt-6 space-y-4">
-                    {parks.map((park) => (
-                      <a
-                        key={park.id}
-                        href={`/parks/${park.id}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleParkClick(park.id);
-                        }}
-                        className="flex items-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
-                      >
-                        <div className="flex-shrink-0 mr-4">
-                          <Image
-                            src={park.thumbnail?.url || 'https://images.microcms-assets.io/assets/159949694f6a490ea709fe5e4d26ba06/6f9155fe0bce45248d40dc8f2bcb35f7/sample_no_img.png'}
-                            alt={park.title}
-                            width={park.thumbnail?.width || 80}
-                            height={park.thumbnail?.height || 80}
-                            className="rounded-md object-cover"
-                            style={{ width: 80, height: 80 }} // Keep a consistent size
-                          />
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{park.title}</h3>
-                          {park.description && <p className="text-gray-700 dark:text-gray-400">{park.description}</p>}
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-
-                  <div className="mt-8 flex justify-between items-center">
-                    <button
-                      onClick={handlePrevPage}
-                      disabled={offset === 0 || isLoading}
-                      className="rounded-md bg-gray-200 px-4 py-2 disabled:opacity-50 text-black"
-                    >
-                      前へ
-                    </button>
-                    <span>
-                      {offset / LIMIT + 1} / {Math.ceil(totalCount / LIMIT)} ページ
-                    </span>
-                    <button
-                      onClick={handleNextPage}
-                      disabled={offset + parks.length >= totalCount || isLoading}
-                      className="rounded-md bg-gray-200 px-4 py-2 disabled:opacity-50 text-black"
-                    >
-                      次へ
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+                        {/* Results */}
+                        <div className="w-full">
+                          {!isLoading && parks.length === 0 && Object.keys(currentParams).length > 0 && (
+                               <p className="mt-8 text-center">条件に合う公園は見つかりませんでした。</p>
+                          )}
+            
+                          {parks.length > 0 && (
+                            <div className="mt-8 w-full text-left">
+                              <h2 className="text-2xl font-bold border-b pb-2 mb-4">
+                                検索結果
+                              </h2>
+                              <div className="mt-6 space-y-4">
+                                {parks.map((park) => (
+                                  <a 
+                                    key={park.id} 
+                                    href={`/parks/${park.id}`}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleParkClick(park.id);
+                                    }}
+                                    className="flex items-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+                                  >
+                                    <div className="flex-shrink-0 mr-4">
+                                      <Image
+                                        src={park.thumbnail?.url || 'https://images.microcms-assets.io/assets/159949694f6a490ea709fe5e4d26ba06/6f9155fe0bce45248d40dc8f2bcb35f7/sample_no_img.png'}
+                                        alt={park.title}
+                                        width={park.thumbnail?.width || 80}
+                                        height={park.thumbnail?.height || 80}
+                                        className="rounded-md object-cover"
+                                        style={{ width: 80, height: 80 }} // Keep a consistent size
+                                      />
+                                    </div>
+                                    <div>
+                                      <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{park.title}</h3>
+                                      {park.description && <p className="text-gray-700 dark:text-gray-400">{park.description}</p>}
+                                    </div>
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>          </div>
         </div>
       </main>
     </>
