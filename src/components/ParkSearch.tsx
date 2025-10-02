@@ -117,9 +117,6 @@ export default function ParkSearch({}: ParkSearchProps) {
             
               {parks.length > 0 && (
                 <div className="mt-8 w-full text-left">
-                  <h2 className="text-2xl font-bold border-b pb-2 mb-4">
-                    検索結果
-                  </h2>
                   <div className="mt-6 space-y-4">
                     {parks.map((park) => (
                       <a 
