@@ -13,11 +13,16 @@ export interface Park {
     height: number;
     width: number;
   };
+  map: {
+    lng: number,
+    lat: number,
+    address: string
+  };
 }
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  
+
   // Pagination params
   const limit = searchParams.get('limit');
   const offset = searchParams.get('offset');
