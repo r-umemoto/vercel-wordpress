@@ -41,6 +41,7 @@ export default function ParkSearch({}: ParkSearchProps) {
     const queryParams = new URLSearchParams();
     queryParams.set("limit", String(LIMIT));
     queryParams.set("offset", String(newOffset));
+    queryParams.set("filters", "pickup[equals]true");
 
     Object.entries(params).forEach(([key, value]) => {
       if (value) {

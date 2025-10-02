@@ -24,11 +24,16 @@ export async function GET(request: NextRequest) {
 
   // Simple search field
   const q = searchParams.get('q');
+  const filters = searchParams.get('filters');
 
   const queries: MicroCMSQueries = {};
 
   if (q) {
     queries.q = q;
+  }
+
+  if (filters) {
+    queries.filters = filters;
   }
 
   // Add pagination to queries
