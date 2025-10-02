@@ -17,11 +17,7 @@ export async function GET(
       contentId: id,
     });
     return NextResponse.json(data);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Failed to fetch property from microCMS" },
-      { status: 500 }
-    );
-  }
+  } catch (_error) {
+    return new NextResponse(
+      JSON.stringify({ error: "Failed to fetch blogs" }),
 }

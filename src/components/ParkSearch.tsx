@@ -14,16 +14,15 @@ const LIMIT = 10;
 type SearchParams = { q?: string };
 
 // The props are no longer needed as the component fetches its own data.
-interface ParkSearchProps {}
 
-export default function ParkSearch({}: ParkSearchProps) {
+export default function ParkSearch() {
   const [parks, setParks] = useState<Park[]>([]); // Initialize with empty array
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
+  const [, setOffset] = useState(0);
 
   // State to hold the params for the current active search (for pagination)
-  const [currentParams, setCurrentParams] = useState<SearchParams>({});
+  const [, setCurrentParams] = useState<SearchParams>({});
 
   // State for detail panel
   const [isPanelOpen, setIsPanelOpen] = useState(false);

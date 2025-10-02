@@ -1,4 +1,4 @@
-import { Autocomplete, Marker, OverlayView } from "@react-google-maps/api";
+import { Autocomplete, OverlayView } from "@react-google-maps/api";
 import { useState, useCallback, useEffect } from "react";
 import BaseMap from "./BaseMap";
 import ParkDetailPanel from "./ParkDetailPanel";
@@ -27,6 +27,21 @@ export interface Park {
   };
 }
 
+const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+  const R = 6371; // Radius of the earth in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLng = (lng2 - lng1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return distance;
+};
+
 const PublicMap = () => {
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 });
   const [zoom, setZoom] = useState(10);
@@ -41,22 +56,7 @@ const PublicMap = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isPanelLoading, setIsPanelLoading] = useState(false);
 
-  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
-    const R = 6371; // Radius of the earth in km
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLng = (lng2 - lng1) * (Math.PI / 180);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * (Math.PI / 180)) *
-        Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
-    return distance;
-  };
-
-  const findAndSetNearbyParks = async (location: google.maps.LatLngLiteral) => {
+  const findAndSetNearbyParks = useCallback(async (location: google.maps.LatLngLiteral) => {
     try {
       const response = await fetch("/api/parks");
       const data = await response.json();
@@ -79,7 +79,7 @@ const PublicMap = () => {
     } catch (error) {
       console.error("Failed to fetch or process parks:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -101,7 +101,7 @@ const PublicMap = () => {
     } else {
       console.error("Error: Your browser doesn't support geolocation.");
     }
-  }, []);
+  }, [findAndSetNearbyParks]);
 
   const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
     setAutocomplete(autocomplete);
@@ -124,7 +124,7 @@ const PublicMap = () => {
     setSelectedLocation(newLocation);
     setZoom(15);
     findAndSetNearbyParks(newLocation);
-  }, [autocomplete]);
+  }, [autocomplete, findAndSetNearbyParks]);
 
   const handleMapClick = useCallback((e: google.maps.MapMouseEvent) => {
     if (!e.latLng) return;
@@ -161,7 +161,7 @@ const PublicMap = () => {
       }
       setSelectedLocation(newLocation);
     });
-  }, []);
+  }, [findAndSetNearbyParks]);
 
   const handleParkClick = async (id: string) => {
     setIsPanelLoading(true);
