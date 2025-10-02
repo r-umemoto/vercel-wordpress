@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Park } from "../app/api/parks/route";
 import Spinner from "./Spinner";
 import dynamic from "next/dynamic";
@@ -12,19 +12,14 @@ const LIMIT = 10;
 
 type SearchParams = { q?: string };
 
-interface ParkSearchProps {
-  initialParks: Park[];
-  initialTotalCount?: number;
-}
+// The props are no longer needed as the component fetches its own data.
+interface ParkSearchProps {}
 
-export default function ParkSearch({ initialParks, initialTotalCount = 0 }: ParkSearchProps) {
-  const [parks, setParks] = useState<Park[]>(initialParks);
+export default function ParkSearch({}: ParkSearchProps) {
+  const [parks, setParks] = useState<Park[]>([]); // Initialize with empty array
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
-
-  // State for simple search
-  const [simpleQuery, setSimpleQuery] = useState("");
 
   // State to hold the params for the current active search (for pagination)
   const [currentParams, setCurrentParams] = useState<SearchParams>({});
@@ -33,6 +28,11 @@ export default function ParkSearch({ initialParks, initialTotalCount = 0 }: Park
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedPark, setSelectedPark] = useState<Park | null>(null);
   const [isPanelLoading, setIsPanelLoading] = useState(false);
+
+  // Fetch parks on initial render
+  useEffect(() => {
+    searchParks({}, 0);
+  }, []);
 
   const searchParks = async (params: SearchParams, newOffset: number) => {
     setIsLoading(true);
@@ -62,10 +62,6 @@ export default function ParkSearch({ initialParks, initialTotalCount = 0 }: Park
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSimpleSearch = () => {
-    searchParks({ q: simpleQuery }, 0);
   };
 
   const handleParkClick = async (id: string) => {
@@ -105,78 +101,57 @@ export default function ParkSearch({ initialParks, initialTotalCount = 0 }: Park
 
       <main className="flex min-h-screen flex-col items-center py-4 pr-4 pl-8 sm:p-8 md:p-12 lg:p-24">
         <div className="w-full max-w-2xl">
-          <h1 className="text-4xl font-bold text-center mb-12">公園検索</h1>
+          <h1 className="text-4xl font-bold text-center mb-12">公園一覧</h1>
 
           <div className="flex flex-col gap-8 items-center w-full">
-            {/* Simple Search Form */}
-            <form
-              className="flex flex-col sm:flex-row w-full justify-center gap-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSimpleSearch();
-              }}
-            >
-              <input
-                type="text"
-                value={simpleQuery}
-                onChange={(e) => setSimpleQuery(e.target.value)}
-                placeholder="キーワードを入力 (全項目対象)"
-                className="border border-gray-300 bg-white rounded-full px-4 py-2 w-full sm:max-w-sm text-black dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="rounded-full bg-blue-600 px-5 text-white hover:bg-blue-700 disabled:bg-gray-400"
-              >
-                検索
-              </button>
-            </form>
+            {/* Search form has been removed */}
 
             {error && <p className="text-red-500 mt-4">{error}</p>}
             {isLoading && !error && <Spinner />}
 
-                        {/* Results */}
-                        <div className="w-full">
-                          {!isLoading && parks.length === 0 && Object.keys(currentParams).length > 0 && (
-                               <p className="mt-8 text-center">条件に合う公園は見つかりませんでした。</p>
-                          )}
+            {/* Results */}
+            <div className="w-full">
+              {!isLoading && parks.length === 0 && (
+                   <p className="mt-8 text-center">公園は見つかりませんでした。</p>
+              )}
             
-                          {parks.length > 0 && (
-                            <div className="mt-8 w-full text-left">
-                              <h2 className="text-2xl font-bold border-b pb-2 mb-4">
-                                検索結果
-                              </h2>
-                              <div className="mt-6 space-y-4">
-                                {parks.map((park) => (
-                                  <a 
-                                    key={park.id} 
-                                    href={`/parks/${park.id}`}
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      handleParkClick(park.id);
-                                    }}
-                                    className="flex items-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
-                                  >
-                                    <div className="flex-shrink-0 mr-4">
-                                      <Image
-                                        src={park.thumbnail?.url || 'https://images.microcms-assets.io/assets/159949694f6a490ea709fe5e4d26ba06/6f9155fe0bce45248d40dc8f2bcb35f7/sample_no_img.png'}
-                                        alt={park.name}
-                                        width={park.thumbnail?.width || 80}
-                                        height={park.thumbnail?.height || 80}
-                                        className="rounded-md object-cover"
-                                        style={{ width: 80, height: 80 }} // Keep a consistent size
-                                      />
-                                    </div>
-                                    <div>
-                                      <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{park.name}</h3>
-                                      {park.description && <p className="text-gray-700 dark:text-gray-400">{park.description}</p>}
-                                    </div>
-                                  </a>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>          </div>
+              {parks.length > 0 && (
+                <div className="mt-8 w-full text-left">
+                  <h2 className="text-2xl font-bold border-b pb-2 mb-4">
+                    検索結果
+                  </h2>
+                  <div className="mt-6 space-y-4">
+                    {parks.map((park) => (
+                      <a 
+                        key={park.id} 
+                        href={`/parks/${park.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleParkClick(park.id);
+                        }}
+                        className="flex items-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+                      >
+                        <div className="flex-shrink-0 mr-4">
+                          <Image
+                            src={park.thumbnail?.url || 'https://images.microcms-assets.io/assets/159949694f6a490ea709fe5e4d26ba06/6f9155fe0bce45248d40dc8f2bcb35f7/sample_no_img.png'}
+                            alt={park.name}
+                            width={park.thumbnail?.width || 80}
+                            height={park.thumbnail?.height || 80}
+                            className="rounded-md object-cover"
+                            style={{ width: 80, height: 80 }} // Keep a consistent size
+                          />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">{park.name}</h3>
+                          {park.description && <p className="text-gray-700 dark:text-gray-400">{park.description}</p>}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </main>
     </>
