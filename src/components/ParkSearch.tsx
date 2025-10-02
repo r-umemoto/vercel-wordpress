@@ -14,16 +14,15 @@ type SearchParams = { q?: string };
 
 interface ParkSearchProps {
   initialParks: Park[];
-  initialTotalCount: number;
+  initialTotalCount?: number;
 }
 
-export default function ParkSearch({ initialParks, initialTotalCount }: ParkSearchProps) {
+export default function ParkSearch({ initialParks, initialTotalCount = 0 }: ParkSearchProps) {
   const [parks, setParks] = useState<Park[]>(initialParks);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
-  const [totalCount, setTotalCount] = useState(initialTotalCount);
-  
+
   // State for simple search
   const [simpleQuery, setSimpleQuery] = useState("");
 
@@ -38,7 +37,7 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
   const searchParks = async (params: SearchParams, newOffset: number) => {
     setIsLoading(true);
     setError(null);
-    
+
     const queryParams = new URLSearchParams();
     queryParams.set("limit", String(LIMIT));
     queryParams.set("offset", String(newOffset));
@@ -56,7 +55,6 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
       }
       const data = await res.json();
       setParks(data.contents);
-      setTotalCount(data.totalCount);
       setOffset(newOffset);
       setCurrentParams(params); // Save current search params for pagination
     } catch (err) {
@@ -68,18 +66,6 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
 
   const handleSimpleSearch = () => {
     searchParks({ q: simpleQuery }, 0);
-  };
-
-  const handlePrevPage = () => {
-    if (offset > 0) {
-      searchParks(currentParams, offset - LIMIT);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (offset + LIMIT < totalCount) {
-      searchParks(currentParams, offset + LIMIT);
-    }
   };
 
   const handleParkClick = async (id: string) => {
@@ -120,7 +106,7 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
       <main className="flex min-h-screen flex-col items-center py-4 pr-4 pl-8 sm:p-8 md:p-12 lg:p-24">
         <div className="w-full max-w-2xl">
           <h1 className="text-4xl font-bold text-center mb-12">公園検索</h1>
-          
+
           <div className="flex flex-col gap-8 items-center w-full">
             {/* Simple Search Form */}
             <form
@@ -148,11 +134,11 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
 
             {error && <p className="text-red-500 mt-4">{error}</p>}
             {isLoading && !error && <Spinner />}
-            
+
             {/* Results */}
             <div className="w-full">
               {!isLoading && totalCount === 0 && Object.keys(currentParams).length > 0 && (
-                   <p className="mt-8 text-center">条件に合う公園は見つかりませんでした。</p>
+                <p className="mt-8 text-center">条件に合う公園は見つかりませんでした。</p>
               )}
 
               {totalCount > 0 && (
@@ -162,8 +148,8 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
                   </h2>
                   <div className="mt-6 space-y-4">
                     {parks.map((park) => (
-                      <a 
-                        key={park.id} 
+                      <a
+                        key={park.id}
                         href={`/parks/${park.id}`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -188,7 +174,7 @@ export default function ParkSearch({ initialParks, initialTotalCount }: ParkSear
                       </a>
                     ))}
                   </div>
-                  
+
                   <div className="mt-8 flex justify-between items-center">
                     <button
                       onClick={handlePrevPage}
