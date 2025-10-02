@@ -3,13 +3,13 @@
 import dynamic from 'next/dynamic';
 import Spinner from '@/components/Spinner';
 
-const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
+const AdminMap = dynamic(() => import('@/components/AdminMap'), {
   ssr: false,
   loading: () => <Spinner />,
 });
 
 const MicroCMSMapPage = () => {
-  return <GoogleMap isMicroCMS={true} />;
+  return <AdminMap />;
 };
 
 export default MicroCMSMapPage;

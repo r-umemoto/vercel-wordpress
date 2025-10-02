@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Spinner from '@/components/Spinner';
 
-const GoogleMapComponent = dynamic(() => import('@/components/GoogleMap'), {
+const PublicMap = dynamic(() => import('@/components/PublicMap'), {
   ssr: false,
   loading: () => <Spinner />,
 });
@@ -11,7 +11,7 @@ const GoogleMapComponent = dynamic(() => import('@/components/GoogleMap'), {
 const MapPage = () => {
   return (
     <main className="w-screen h-screen">
-      <GoogleMapComponent />
+      <PublicMap />
     </main>
   );
 };
