@@ -2,8 +2,32 @@
 
 import { Autocomplete } from "@react-google-maps/api";
 import { useState, useEffect, useCallback } from "react";
-import { useFieldExtension } from "microcms-field-extension-react";
+import {
+  useFieldExtension as useFieldExtensionOriginal,
+  type SetupOption,
+  type GetDefaultDataMessage,
+  type Message,
+  type User,
+  type MessageContext,
+} from "microcms-field-extension-react";
 import BaseMap from "./BaseMap";
+
+type UseFieldExtensionReturnValue<T> = {
+  data: T;
+  sendMessage: (message: Message) => void;
+  user: User;
+  context: MessageContext | undefined;
+};
+
+type UseFieldExtension = <T>(
+  initialState: T,
+  option: SetupOption & {
+    onDefaultData?: (message: GetDefaultDataMessage) => void;
+  }
+) => UseFieldExtensionReturnValue<T>;
+
+const useFieldExtension =
+  useFieldExtensionOriginal as unknown as UseFieldExtension;
 
 interface SelectedLocation {
   lat: number;
@@ -13,8 +37,8 @@ interface SelectedLocation {
 
 const AdminMap = () => {
   const { data, sendMessage } = useFieldExtension<
-    { lat: number; lng: number; address: string } | null
-  >(null, {
+    { lat: number; lng: number; address: string } | undefined
+  >(undefined, {
     origin: `https://${process.env.NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN}.microcms.io`,
     height: 600,
     width: "100%",
