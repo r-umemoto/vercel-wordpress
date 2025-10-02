@@ -1,9 +1,17 @@
 import { notFound } from "next/navigation";
 import { client } from "@/lib/microcms";
-import type { Property } from "@/app/api/blogs/route";
 import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
 import { Metadata } from "next";
+
+// microCMSから取得する物件データの型定義
+export interface Property {
+  id: string;
+  name: string;
+  description?: string;
+  content?: string;
+  publishedAt: string;
+}
 
 // ISR: ページの再生成時間を60秒に設定
 export const revalidate = 60;
@@ -20,19 +28,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   try {
     property = await client.get<Property>({
-      endpoint: "blog",
+      endpoint: "properties",
       contentId: id,
     });
-  } catch (error) {
+  } catch {
     notFound();
   }
 
   return {
-    title: property.title,
+    title: property.name,
     description: property.description,
   };
 }
-
 
  /**
  * 物件詳細ページ (サーバーコンポーネント)
@@ -62,7 +69,7 @@ export default async function PropertyDetail({ params }: Props) {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-24 pb-20">
       <div className="w-full max-w-2xl">
-        <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
+        <h1 className="text-4xl font-bold mb-4">{property.name}</h1>
         {property.description && (
           <p className="text-lg text-gray-600 my-4">{property.description}</p>
         )}
@@ -85,12 +92,3 @@ export default async function PropertyDetail({ params }: Props) {
     </main>
   );
 }
-
-t-white font-bold hover:underline">
-          検索ページへ戻る
-        </Link>
-      </footer>
-    </main>
-  );
-}
-
