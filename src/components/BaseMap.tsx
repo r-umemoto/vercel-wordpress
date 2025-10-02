@@ -58,8 +58,8 @@ const BaseMap = ({
         onClick={onMapClick}
       >
         {markerPosition && <Marker position={markerPosition} />}
+        {children}
       </GoogleMap>
-      {children}
     </div>
   );
 };
