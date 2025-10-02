@@ -5,6 +5,7 @@ import type { Park } from "../app/api/parks/route";
 import Spinner from "./Spinner";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 
 const ParkDetailPanel = dynamic(() => import("./ParkDetailPanel"), { ssr: false });
 
@@ -155,10 +156,10 @@ export default function ParkSearch({}: ParkSearchProps) {
               <h2 className="text-2xl font-bold text-center mb-8">他の方法で探す</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Card 1: Map */}
-                <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer">
+                <Link href="/map" className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer">
                   <Image src="/globe.svg" alt="Map Icon" width={48} height={48} />
                   <h3 className="mt-4 text-lg font-semibold">地図から探す</h3>
-                </div>
+                </Link>
 
                 {/* Card 2: Address */}
                 <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer">
