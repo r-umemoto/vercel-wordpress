@@ -12,7 +12,10 @@ interface SelectedLocation {
 }
 
 const AdminMap = () => {
-  const { data, sendMessage } = useFieldExtension<SelectedLocation | null>(null, {
+  const [currentLocation, setCurrentLocation] =
+    useState<SelectedLocation | null>(null);
+
+  const { data, sendMessage } = useFieldExtension<currentLocation | null>(null, {
     origin: `https://${process.env.NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN}.microcms.io`,
     height: 600,
     width: "100%",
@@ -31,8 +34,7 @@ const AdminMap = () => {
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
   const [inputValue, setInputValue] = useState("");
-  const [currentLocation, setCurrentLocation] =
-    useState<SelectedLocation | null>(null);
+
 
   useEffect(() => {
     if (data && data.lat && data.lng) {
