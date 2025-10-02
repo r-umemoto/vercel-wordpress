@@ -49,7 +49,7 @@ export default async function ParkDetail({ params }: Props) {
       endpoint: "parks",
       contentId: id,
     });
-  } catch (error) {
+  } catch {
     // データ取得に失敗した場合は404ページを表示
     notFound();
   }

@@ -46,7 +46,7 @@ export default async function PropertyDetail({ params }: Props) {
   try {
     // サーバーサイドでmicroCMSから直接データを取得
     property = await client.get<Property>({
-      endpoint: "blog",
+      endpoint: "properties",
       contentId: id,
     });
   } catch {
@@ -79,6 +79,14 @@ export default async function PropertyDetail({ params }: Props) {
       </div>
       <footer className="fixed bottom-0 left-0 right-0 w-full bg-orange-500/50 p-4 text-center">
         <Link href="/" className="text-white font-bold hover:underline">
+          検索ページへ戻る
+        </Link>
+      </footer>
+    </main>
+  );
+}
+
+t-white font-bold hover:underline">
           検索ページへ戻る
         </Link>
       </footer>

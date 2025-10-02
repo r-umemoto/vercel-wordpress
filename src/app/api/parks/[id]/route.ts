@@ -15,7 +15,7 @@ export async function GET(
       contentId: id,
     });
     return NextResponse.json(park);
-  } catch (_error) {
+  } catch {
     return NextResponse.json(
       { error: `Failed to fetch park ${id} from microCMS` },
       { status: 500 }
