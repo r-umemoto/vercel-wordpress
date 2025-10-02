@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
 
   // 3. 許可するドメインを環境変数から取得（カンマ区切り）
   const allowedDomains = process.env.ALLOWED_DOMAINS?.split(',') || [];
-  
+
   // 4. リファラを取得
   const referer = request.headers.get('referer');
 
@@ -43,5 +43,5 @@ export function middleware(request: NextRequest) {
 
 // ミドルウェアが実行されるパスを指定
 export const config = {
-  matcher: '/map',
+  matcher: '/map/microcms',
 };
