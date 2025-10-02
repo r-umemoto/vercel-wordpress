@@ -13,10 +13,10 @@ export interface Park {
     height: number;
     width: number;
   };
-  map: {
-    lng: number,
-    lat: number,
-    address: string
+  map?: {
+    lng: number;
+    lat: number;
+    address: string;
   };
 }
 
