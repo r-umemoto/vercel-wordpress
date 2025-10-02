@@ -2,34 +2,30 @@
 
 import { Autocomplete } from "@react-google-maps/api";
 import { useState, useEffect, useCallback } from "react";
-import {
-  useFieldExtension as useFieldExtensionOriginal,
-  type SetupOption,
-  type GetDefaultDataMessage,
-  // 'Message' is defined but never used, so it has been removed.
-  type User as MicroCMSUser, // ★ 修正点1: User型に 'MicroCMSUser' という別名を付けます
-  type MessageContext,
-} from "microcms-field-extension-react";
+// ★ 修正点1: ライブラリ全体を 'MicroCMS' という名前でインポートします
+import * as MicroCMS from "microcms-field-extension-react";
 import BaseMap from "./BaseMap";
 
 // The message type was changed from 'any' to a specific object type.
 // This resolves the '@typescript-eslint/no-explicit-any' error.
+// ★ 修正点2: MicroCMSオブジェクトからドットで型にアクセスします
 type UseFieldExtensionReturnValue<T> = {
   data: T;
   sendMessage: (message: { data: T }) => void;
-  user: MicroCMSUser; // ★ 修正点2: 別名を型として使用します
-  context: MessageContext | undefined;
+  user: MicroCMS.User;
+  context: MicroCMS.MessageContext | undefined;
 };
 
+// ★ 修正点3: ここも同様に修正します
 type UseFieldExtension = <T>(
   initialState: T,
-  option: SetupOption & {
-    onDefaultData?: (message: GetDefaultDataMessage) => void;
+  option: MicroCMS.SetupOption & {
+    onDefaultData?: (message: MicroCMS.GetDefaultDataMessage) => void;
   }
 ) => UseFieldExtensionReturnValue<T>;
 
 const useFieldExtension =
-  useFieldExtensionOriginal as unknown as UseFieldExtension;
+  MicroCMS.useFieldExtension as unknown as UseFieldExtension;
 
 interface SelectedLocation {
   lat: number;
@@ -73,7 +69,6 @@ const AdminMap = () => {
 
   useEffect(() => {
     if (currentLocation) {
-      // The shape of this object now matches the updated sendMessage type.
       sendMessage({ data: currentLocation });
     }
   }, [currentLocation, sendMessage]);
@@ -242,3 +237,4 @@ const AdminMap = () => {
 };
 
 export default AdminMap;
+
