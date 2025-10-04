@@ -194,7 +194,7 @@ const PublicMap = () => {
               <div
                 className={`${styles.property} ${styles[park.type || 'house']} ${highlightedParkId === park.id ? styles.highlight : ''}`}>
                 <div className={styles.icon}>
-                  <i aria-hidden="true" className={`fa fa-icon fa-${park.type}`} title={park.type}></i>
+                  <i aria-hidden="true" className={`fa fa-icon fa-${park.type}`} title={park.type}>{park.name}</i>
                   <span className="fa-sr-only">{park.type}</span>
                 </div>
                 <div className={styles.details}>
@@ -212,9 +212,10 @@ const PublicMap = () => {
                         </div>
                       )}
                       {park.description && <p style={{ margin: '10px 0' }}>{park.description}</p>}
-                      {park.map?.address && <p style={{ fontSize: '0.8rem', color: 'grey' }}>{park.map.address}</p>}
+                      {park.map?.address && <p className={styles.address}>{park.map.address}</p>}
                       {park.content && (
                         <div
+                          className={styles.parkContent}
                           style={{ marginTop: '15px', fontSize: '0.9rem' }}
                           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(park.content) }}
                         />

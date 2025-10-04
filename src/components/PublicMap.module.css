@@ -30,17 +30,18 @@ body {
 .property {
   align-items: center;
   background-color: #FFFFFF;
-  border-radius: 50%;
+  border-radius: 20px;
   color: #263238;
   display: flex;
   font-size: 14px;
   gap: 15px;
   height: 30px;
   justify-content: center;
-  padding: 4px;
+  padding: 4px 12px;
   position: relative;
   transition: transform 0.3s ease-out, background-color 0.3s ease-out, box-shadow 0.3s ease-out;
-  width: 30px;
+  width: auto;
+  white-space: nowrap;
   transform: translateY(-9px);
 }
 
@@ -76,14 +77,19 @@ body {
 }
 
 .property .details > * {
-  overflow: hidden;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .property .address {
   color: #9E9E9E;
-  font-size: 10px;
+  font-size: 0.8rem;
   margin-bottom: 10px;
   margin-top: 5px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .property .features {
@@ -199,4 +205,10 @@ body {
 
 .property.shop:not(.highlight)::after {
   border-top: 9px solid var(--shop-color);
+}
+
+.parkContent * {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
