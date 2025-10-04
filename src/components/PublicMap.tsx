@@ -18,6 +18,7 @@ export interface Park {
   name: string;
   description?: string;
   content?: string;
+  pickup?: boolean;
   thumbnail?: {
     url: string;
     height: number;
@@ -57,6 +58,10 @@ const PublicMap = () => {
     useState<google.maps.places.Autocomplete | null>(null);
   const [parks, setParks] = useState<Park[]>([]);
   const [highlightedParkId, setHighlightedParkId] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedParkForModal, setSelectedParkForModal] = useState<Park | null>(
+    null
+  );
 
   const findAndSetNearbyParks = useCallback(async (location: google.maps.LatLngLiteral) => {
     try {
@@ -174,6 +179,16 @@ const PublicMap = () => {
     }
   }, [highlightedParkId]);
 
+  const handleOpenModal = (park: Park) => {
+    setSelectedParkForModal(park);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedParkForModal(null);
+  };
+
   return (
     <>
       <BaseMap
@@ -211,7 +226,6 @@ const PublicMap = () => {
                           />
                         </div>
                       )}
-                      {park.description && <p style={{ margin: '10px 0' }}>{park.description}</p>}
                       {park.map?.address && <p className={styles.address}>{park.map.address}</p>}
                       {park.content && (
                         <div
@@ -220,6 +234,14 @@ const PublicMap = () => {
                           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(park.content) }}
                         />
                       )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenModal(park);
+                        }}
+                        className={styles.modalButton}>
+                        詳細を見る
+                      </button>
                     </>
                   )}
                 </div>
@@ -278,6 +300,43 @@ const PublicMap = () => {
           </div>
         )}
       </BaseMap>
+      {modalOpen && selectedParkForModal && (
+        <div
+          className={styles.modalOverlay}
+          onClick={handleCloseModal}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={handleCloseModal}
+              className={styles.closeButton}
+            >
+              &times;
+            </button>
+            <h2>{selectedParkForModal.name}</h2>
+            {selectedParkForModal.thumbnail && (
+              <div style={{ position: 'relative', width: '100%', height: '200px', margin: '10px 0' }}>
+                <Image
+                  src={selectedParkForModal.thumbnail.url}
+                  alt={selectedParkForModal.name}
+                  fill
+                  style={{ objectFit: 'cover', borderRadius: '8px' }}
+                />
+              </div>
+            )}
+            {selectedParkForModal.pickup && <p style={{ color: 'red', fontWeight: 'bold' }}>Pickup!</p>}
+            {selectedParkForModal.description && <p>{selectedParkForModal.description}</p>}
+            {selectedParkForModal.map?.address && <p>{selectedParkForModal.map.address}</p>}
+            {selectedParkForModal.content && (
+              <div
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedParkForModal.content) }}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 };
