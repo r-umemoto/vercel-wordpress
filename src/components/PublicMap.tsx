@@ -1,7 +1,9 @@
-import { Autocomplete, OverlayView } from "@react-google-maps/api";
+import { Autocomplete } from "@react-google-maps/api";
 import { useState, useCallback, useEffect } from "react";
 import BaseMap from "./BaseMap";
 import ParkDetailPanel from "./ParkDetailPanel";
+import styles from "./PublicMap.module.css";
+import AdvancedMarkerWrapper from "./AdvancedMarkerWrapper";
 
 interface SelectedLocation {
   lat: number;
@@ -25,6 +27,7 @@ export interface Park {
     lat: number;
     address: string;
   };
+  type?: string; // Add type for icon
 }
 
 const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
@@ -55,12 +58,13 @@ const PublicMap = () => {
   const [selectedPark, setSelectedPark] = useState<Park | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isPanelLoading, setIsPanelLoading] = useState(false);
+  const [highlightedParkId, setHighlightedParkId] = useState<string | null>(null);
 
   const findAndSetNearbyParks = useCallback(async (location: google.maps.LatLngLiteral) => {
     try {
       const response = await fetch("/api/parks");
       const data = await response.json();
-      const allParks: Park[] = data.contents;
+      const allParks: Park[] = data.contents.map((park: Park) => ({ ...park, type: 'house' })); // Add default type
 
       const nearbyParks = allParks.filter((park) => {
         if (park.map) {
@@ -138,6 +142,7 @@ const PublicMap = () => {
     setCenter(newPosition);
     setZoom(15);
     findAndSetNearbyParks(newPosition);
+    setHighlightedParkId(null); // Unhighlight on map click
 
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ location: e.latLng }, (results, status) => {
@@ -163,12 +168,13 @@ const PublicMap = () => {
     });
   }, [findAndSetNearbyParks]);
 
-  const handleParkClick = async (id: string) => {
+  const handleParkClick = async (park: Park) => {
+    setHighlightedParkId(park.id);
     setIsPanelLoading(true);
     setSelectedPark(null);
     setIsPanelOpen(true);
     try {
-      const res = await fetch(`/api/parks/${id}`);
+      const res = await fetch(`/api/parks/${park.id}`);
       if (!res.ok) {
         throw new Error("公園の詳細の取得に失敗しました。");
       }
@@ -185,6 +191,7 @@ const PublicMap = () => {
   const handleClosePanel = () => {
     setIsPanelOpen(false);
     setSelectedPark(null);
+    setHighlightedParkId(null); // Unhighlight on panel close
   };
 
   return (
@@ -204,29 +211,24 @@ const PublicMap = () => {
       >
         {parks.map((park) => (
           park.map && (
-            <OverlayView
+            <AdvancedMarkerWrapper
               key={park.id}
               position={{ lat: park.map.lat, lng: park.map.lng }}
-              mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              zIndex={highlightedParkId === park.id ? 1 : 0}
+              onClick={() => handleParkClick(park)}
             >
               <div
-                style={{
-                  backgroundColor: "rgba(255, 255, 0, 0.7)",
-                  padding: "8px 12px",
-                  borderRadius: "3px",
-                  color: "black",
-                  fontSize: "20px",
-                  whiteSpace: "nowrap",
-                  cursor: "pointer",
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleParkClick(park.id);
-                }}
-              >
-                {park.name}
+                className={`${styles.property} ${styles[park.type || 'house']} ${highlightedParkId === park.id ? styles.highlight : ''}`}>
+                <div className={styles.icon}>
+                  <i aria-hidden="true" className={`fa fa-icon fa-${park.type}`} title={park.type}></i>
+                  <span className="fa-sr-only">{park.type}</span>
+                </div>
+                <div className={styles.details}>
+                  <div className={styles.price}>{park.name}</div>
+                  <div className={styles.address}>{park.map.address}</div>
+                </div>
               </div>
-            </OverlayView>
+            </AdvancedMarkerWrapper>
           )
         ))}
         <div

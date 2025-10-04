@@ -23,12 +23,13 @@ const BaseMap = ({
   mapContainerStyle,
   wrapperStyle, // New prop
 }: BaseMapProps) => {
-  const [libraries] = useState<("places")[]>(["places"]);
+  const [libraries] = useState<("places" | "marker")[]>(["places", "marker"]);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     libraries,
     language: "ja",
+    mapIds: [process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID || ""],
   });
 
   const defaultMapContainerStyle = useMemo(
@@ -45,6 +46,10 @@ const BaseMap = ({
     height: "600px",
   };
 
+  const mapOptions = useMemo(() => ({
+    mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
+  }), []);
+
   if (!isLoaded) {
     return <Spinner />;
   }
@@ -56,6 +61,7 @@ const BaseMap = ({
         center={center}
         zoom={zoom}
         onClick={onMapClick}
+        options={mapOptions}
       >
         {markerPosition && <Marker position={markerPosition} />}
         {children}
