@@ -1,7 +1,8 @@
 import { Autocomplete } from "@react-google-maps/api";
 import { useState, useCallback, useEffect } from "react";
+import Image from "next/image";
+import DOMPurify from "isomorphic-dompurify";
 import BaseMap from "./BaseMap";
-import ParkDetailPanel from "./ParkDetailPanel";
 import styles from "./PublicMap.module.css";
 import AdvancedMarkerWrapper from "./AdvancedMarkerWrapper";
 
@@ -55,14 +56,11 @@ const PublicMap = () => {
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
   const [parks, setParks] = useState<Park[]>([]);
-  const [selectedPark, setSelectedPark] = useState<Park | null>(null);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [isPanelLoading, setIsPanelLoading] = useState(false);
   const [highlightedParkId, setHighlightedParkId] = useState<string | null>(null);
 
   const findAndSetNearbyParks = useCallback(async (location: google.maps.LatLngLiteral) => {
     try {
-      const response = await fetch("/api/parks");
+      const response = await fetch("/api/parks?limit=50"); // Fetch more parks
       const data = await response.json();
       const allParks: Park[] = data.contents.map((park: Park) => ({ ...park, type: 'house' })); // Add default type
 
@@ -132,6 +130,7 @@ const PublicMap = () => {
 
   const handleMapClick = useCallback((e: google.maps.MapMouseEvent) => {
     if (!e.latLng) return;
+    setHighlightedParkId(null); // Unhighlight on map click
 
     const newPosition = {
       lat: e.latLng.lat(),
@@ -142,7 +141,6 @@ const PublicMap = () => {
     setCenter(newPosition);
     setZoom(15);
     findAndSetNearbyParks(newPosition);
-    setHighlightedParkId(null); // Unhighlight on map click
 
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ location: e.latLng }, (results, status) => {
@@ -168,40 +166,16 @@ const PublicMap = () => {
     });
   }, [findAndSetNearbyParks]);
 
-  const handleParkClick = async (park: Park) => {
-    setHighlightedParkId(park.id);
-    setIsPanelLoading(true);
-    setSelectedPark(null);
-    setIsPanelOpen(true);
-    try {
-      const res = await fetch(`/api/parks/${park.id}`);
-      if (!res.ok) {
-        throw new Error("公園の詳細の取得に失敗しました。");
-      }
-      const data = await res.json();
-      setSelectedPark(data);
-    } catch (err) {
-      console.error(err);
-      handleClosePanel();
-    } finally {
-      setIsPanelLoading(false);
+  const handleParkClick = useCallback((park: Park) => {
+    if (highlightedParkId === park.id) {
+      setHighlightedParkId(null);
+    } else {
+      setHighlightedParkId(park.id);
     }
-  };
-
-  const handleClosePanel = () => {
-    setIsPanelOpen(false);
-    setSelectedPark(null);
-    setHighlightedParkId(null); // Unhighlight on panel close
-  };
+  }, [highlightedParkId]);
 
   return (
     <>
-      <ParkDetailPanel
-        isOpen={isPanelOpen}
-        isLoading={isPanelLoading}
-        park={selectedPark}
-        onClose={handleClosePanel}
-      />
       <BaseMap
         center={center}
         zoom={zoom}
@@ -224,8 +198,29 @@ const PublicMap = () => {
                   <span className="fa-sr-only">{park.type}</span>
                 </div>
                 <div className={styles.details}>
-                  <div className={styles.price}>{park.name}</div>
-                  <div className={styles.address}>{park.map.address}</div>
+                  {highlightedParkId === park.id && (
+                    <>
+                      <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{park.name}</h2>
+                      {park.thumbnail && (
+                        <div style={{ position: 'relative', width: '100%', height: '150px', margin: '10px 0' }}>
+                          <Image
+                            src={park.thumbnail.url}
+                            alt={park.name}
+                            fill
+                            style={{ objectFit: 'cover', borderRadius: '8px' }}
+                          />
+                        </div>
+                      )}
+                      {park.description && <p style={{ margin: '10px 0' }}>{park.description}</p>}
+                      {park.map?.address && <p style={{ fontSize: '0.8rem', color: 'grey' }}>{park.map.address}</p>}
+                      {park.content && (
+                        <div
+                          style={{ marginTop: '15px', fontSize: '0.9rem' }}
+                          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(park.content) }}
+                        />
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </AdvancedMarkerWrapper>

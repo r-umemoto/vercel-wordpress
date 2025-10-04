@@ -39,8 +39,7 @@ body {
   justify-content: center;
   padding: 4px;
   position: relative;
-  position: relative;
-  transition: all 0.3s ease-out;
+  transition: transform 0.3s ease-out, background-color 0.3s ease-out, box-shadow 0.3s ease-out;
   width: 30px;
   transform: translateY(-9px);
 }
@@ -55,7 +54,7 @@ body {
   position: absolute;
   top: 95%;
   transform: translate(-50%, 0);
-  transition: all 0.3s ease-out;
+  transition: border-color 0.3s ease-out;
   width: 0;
   z-index: 1;
 }
@@ -74,8 +73,10 @@ body {
 
 .property .details {
   display: none;
-  flex-direction: column;
-  flex: 1;
+}
+
+.property .details > * {
+  overflow: hidden;
 }
 
 .property .address {
@@ -110,9 +111,9 @@ body {
   background-color: #FFFFFF;
   border-radius: 8px;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
-  height: 80px;
+  width: 300px; /* Set a max width */
   padding: 8px 15px;
-  width: auto;
+  height: auto; /* Explicitly allow height to grow */
 }
 
 .property.highlight::after {
@@ -121,11 +122,11 @@ body {
 
 .property.highlight .details {
   display: flex;
+  flex-direction: column;
 }
 
-.property.highlight .icon svg {
-  width: 50px;
-  height: 50px;
+.property.highlight .icon {
+  display: none; /* Hide small icon when highlighted */
 }
 
 .property .bed {

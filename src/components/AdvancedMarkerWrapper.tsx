@@ -1,11 +1,11 @@
+import { useGoogleMap } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useGoogleMap } from "@react-google-maps/api";
 
 interface AdvancedMarkerProps {
   position: google.maps.LatLngLiteral;
   children: React.ReactNode;
-  onClick?: (e: MouseEvent) => void;
+  onClick?: (e: google.maps.MapMouseEvent) => void;
   zIndex?: number;
 }
 
@@ -22,27 +22,32 @@ const AdvancedMarkerWrapper = ({ position, children, onClick, zIndex }: Advanced
   useEffect(() => {
     if (!map || !content) return;
 
-    const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
+    const markerInstance = new google.maps.marker.AdvancedMarkerElement({
       map,
       position,
       content,
     });
 
-    setMarker(advancedMarker);
+    setMarker(markerInstance);
 
     return () => {
-      advancedMarker.map = null;
+      markerInstance.map = null;
     };
-  }, [map, content, position]);
+  }, [map, content]);
 
   useEffect(() => {
-    if (!content || !onClick) return;
-
-    content.addEventListener("click", onClick);
+    if (!marker || !onClick) return;
+    const listener = marker.addListener("click", onClick);
     return () => {
-      content.removeEventListener("click", onClick);
+      listener.remove();
     };
-  }, [content, onClick]);
+  }, [marker, onClick]);
+
+  useEffect(() => {
+    if (marker) {
+      marker.position = position;
+    }
+  }, [marker, position]);
 
   useEffect(() => {
     if (marker) {
