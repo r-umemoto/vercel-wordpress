@@ -1,5 +1,5 @@
 import { Autocomplete } from "@react-google-maps/api";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import DOMPurify from "isomorphic-dompurify";
@@ -65,6 +65,7 @@ const PublicMap = () => {
     null
   );
   const [isClient, setIsClient] = useState(false);
+  const justOpenedModal = useRef(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -184,6 +185,16 @@ const PublicMap = () => {
 
   const handleParkClick = useCallback(
     (park: Park) => {
+      if (justOpenedModal.current) {
+        justOpenedModal.current = false;
+        return;
+      }
+
+      if (highlightedParkId === park.id) {
+        setHighlightedParkId(null);
+        return;
+      }
+
       if (!map || !park.map) return;
 
       const bounds = map.getBounds();
@@ -221,12 +232,13 @@ const PublicMap = () => {
 
       setHighlightedParkId(park.id);
     },
-    [map]
+    [map, highlightedParkId]
   );
 
   const handleOpenModal = (park: Park) => {
     setSelectedParkForModal(park);
     setModalOpen(true);
+    justOpenedModal.current = true;
   };
 
   const handleCloseModal = () => {
