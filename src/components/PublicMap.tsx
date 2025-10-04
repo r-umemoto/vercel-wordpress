@@ -49,6 +49,7 @@ const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: numbe
 };
 
 const PublicMap = () => {
+  const [map, setMap] = useState<google.maps.Map | null>(null);
   const [center, setCenter] = useState({ lat: 35.6895, lng: 139.6917 });
   const [zoom, setZoom] = useState(10);
   const [markerPosition, setMarkerPosition] =
@@ -67,6 +68,10 @@ const PublicMap = () => {
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    setMap(map);
   }, []);
 
   const findAndSetNearbyParks = useCallback(async (location: google.maps.LatLngLiteral) => {
@@ -177,13 +182,47 @@ const PublicMap = () => {
     });
   }, [findAndSetNearbyParks]);
 
-  const handleParkClick = useCallback((park: Park) => {
-    if (highlightedParkId === park.id) {
-      setHighlightedParkId(null);
-    } else {
+  const handleParkClick = useCallback(
+    (park: Park) => {
+      if (!map || !park.map) return;
+
+      const bounds = map.getBounds();
+      if (!bounds) {
+        map.panTo({ lat: park.map.lat, lng: park.map.lng });
+        setHighlightedParkId(park.id);
+        return;
+      }
+
+      const ne = bounds.getNorthEast();
+      const sw = bounds.getSouthWest();
+
+      const latSpan = ne.lat() - sw.lat();
+      const lngSpan = ne.lng() - sw.lng();
+
+      const latInset = latSpan * 0.25;
+      const lngInset = lngSpan * 0.2;
+
+      const safeBounds = {
+        north: ne.lat() - latInset,
+        south: sw.lat() + latInset,
+        east: ne.lng() - lngInset,
+        west: sw.lng() + lngInset,
+      };
+
+      const isInsideSafeBounds =
+        park.map.lat < safeBounds.north &&
+        park.map.lat > safeBounds.south &&
+        park.map.lng < safeBounds.east &&
+        park.map.lng > safeBounds.west;
+
+      if (!isInsideSafeBounds) {
+        map.panTo({ lat: park.map.lat, lng: park.map.lng });
+      }
+
       setHighlightedParkId(park.id);
-    }
-  }, [highlightedParkId]);
+    },
+    [map]
+  );
 
   const handleOpenModal = (park: Park) => {
     setSelectedParkForModal(park);
@@ -202,6 +241,7 @@ const PublicMap = () => {
         zoom={zoom}
         markerPosition={markerPosition}
         onMapClick={handleMapClick}
+        onLoad={onMapLoad}
         wrapperStyle={{ position: "relative", width: "100%", height: "100%" }}
       >
         {parks.map((park) => (
@@ -244,6 +284,7 @@ const PublicMap = () => {
                       <button
                         onPointerUp={(e) => {
                           e.stopPropagation();
+                          e.preventDefault();
                           handleOpenModal(park);
                         }}
                         className={styles.modalButton}>

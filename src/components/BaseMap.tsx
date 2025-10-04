@@ -9,9 +9,10 @@ interface BaseMapProps {
   zoom: number;
   markerPosition: google.maps.LatLngLiteral | null;
   onMapClick?: (e: google.maps.MapMouseEvent) => void;
+  onLoad?: (map: google.maps.Map) => void;
   children?: React.ReactNode;
   mapContainerStyle?: React.CSSProperties;
-  wrapperStyle?: React.CSSProperties; // New prop
+  wrapperStyle?: React.CSSProperties;
 }
 
 const BaseMap = ({
@@ -19,9 +20,10 @@ const BaseMap = ({
   zoom,
   markerPosition,
   onMapClick,
+  onLoad,
   children,
   mapContainerStyle,
-  wrapperStyle, // New prop
+  wrapperStyle,
 }: BaseMapProps) => {
   const [libraries] = useState<("places" | "marker")[]>(["places", "marker"]);
   const { isLoaded } = useJsApiLoader({
@@ -61,6 +63,7 @@ const BaseMap = ({
         center={center}
         zoom={zoom}
         onClick={onMapClick}
+        onLoad={onLoad}
         options={mapOptions}
       >
         {markerPosition && <Marker position={markerPosition} />}
