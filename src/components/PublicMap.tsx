@@ -284,7 +284,6 @@ const PublicMap = () => {
                           />
                         </div>
                       )}
-                      {park.description && <p style={{ margin: '10px 0' }}>{park.description}</p>}
                       {park.map?.address && <p className={styles.address}>{park.map.address}</p>}
                       {park.content && (
                         <div
