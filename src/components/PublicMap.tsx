@@ -1,5 +1,6 @@
 import { Autocomplete } from "@react-google-maps/api";
 import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import DOMPurify from "isomorphic-dompurify";
 import BaseMap from "./BaseMap";
@@ -62,6 +63,11 @@ const PublicMap = () => {
   const [selectedParkForModal, setSelectedParkForModal] = useState<Park | null>(
     null
   );
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const findAndSetNearbyParks = useCallback(async (location: google.maps.LatLngLiteral) => {
     try {
@@ -226,6 +232,7 @@ const PublicMap = () => {
                           />
                         </div>
                       )}
+                      {park.description && <p style={{ margin: '10px 0' }}>{park.description}</p>}
                       {park.map?.address && <p className={styles.address}>{park.map.address}</p>}
                       {park.content && (
                         <div
@@ -235,7 +242,7 @@ const PublicMap = () => {
                         />
                       )}
                       <button
-                        onClick={(e) => {
+                        onPointerUp={(e) => {
                           e.stopPropagation();
                           handleOpenModal(park);
                         }}
@@ -300,7 +307,7 @@ const PublicMap = () => {
           </div>
         )}
       </BaseMap>
-      {modalOpen && selectedParkForModal && (
+      {isClient && modalOpen && selectedParkForModal && createPortal(
         <div
           className={styles.modalOverlay}
           onClick={handleCloseModal}
@@ -335,7 +342,8 @@ const PublicMap = () => {
               />
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
