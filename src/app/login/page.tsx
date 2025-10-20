@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 export default function LoginPage() {
@@ -26,8 +26,10 @@ export default function LoginPage() {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(userCredential.user, { displayName: name });
+        await sendEmailVerification(userCredential.user);
+        alert('A verification email has been sent. Please check your inbox and then log in.');
         console.log('Signed up and profile updated!', userCredential.user);
-        router.push('/');
+        setIsSignUp(false); // Switch to login form
       } catch (err: any) {
         setError(err.message);
       }
@@ -35,6 +37,10 @@ export default function LoginPage() {
       // Sign In
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (!userCredential.user.emailVerified) {
+          setError('Please verify your email before logging in.');
+          return;
+        }
         console.log('Signed in!', userCredential.user);
         router.push('/');
       } catch (err: any) {
