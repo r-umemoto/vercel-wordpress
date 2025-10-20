@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -25,10 +26,19 @@ export default function LoginPage() {
       }
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(userCredential.user, { displayName: name });
-        await sendEmailVerification(userCredential.user);
+        const user = userCredential.user;
+
+        // Update profile and create user document in Firestore
+        await updateProfile(user, { displayName: name });
+        await setDoc(doc(db, "users", user.uid), {
+          displayName: name,
+          email: user.email,
+          address: "" // Initialize address field
+        });
+
+        await sendEmailVerification(user);
         alert('A verification email has been sent. Please check your inbox and then log in.');
-        console.log('Signed up and profile updated!', userCredential.user);
+        console.log('Signed up and profile updated!', user);
         setIsSignUp(false); // Switch to login form
       } catch (err: any) {
         setError(err.message);

@@ -39,6 +39,9 @@ const Header = () => {
               {user ? (
                 <>
                   <span className="text-sm">こんにちは、{user.displayName || user.email}さん</span>
+                  <Link href="/profile" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
+                    プロフィール
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"
