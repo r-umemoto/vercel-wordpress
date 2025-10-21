@@ -15,7 +15,7 @@ export default function VerifyPage() {
   useEffect(() => {
     const verifySignIn = async () => {
       if (isSignInWithEmailLink(auth, window.location.href)) {
-        let email = window.localStorage.getItem('emailForSignIn');
+        const email = window.localStorage.getItem('emailForSignIn');
         if (!email) {
           setError('メールアドレスが見つかりません。同じブラウザで操作を続けてください。');
           setMessage('');
@@ -39,7 +39,7 @@ export default function VerifyPage() {
 
           router.push('/');
 
-        } catch (err) {
+        } catch {
           setError('ログイン中にエラーが発生しました。リンクが無効であるか、有効期限が切れている可能性があります。');
           setMessage('');
         }

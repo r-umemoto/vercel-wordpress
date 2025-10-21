@@ -18,7 +18,6 @@ export default function ProfilePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
-  const [userData, setUserData] = useState<CustomUserData | null>(null);
   const [address, setAddress] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState('');
@@ -39,7 +38,6 @@ export default function ProfilePage() {
 
         if (userDocSnap.exists()) {
           const data = userDocSnap.data() as CustomUserData;
-          setUserData(data);
           setAddress(data.address || '');
         } else {
           // This case can happen if the user was created before we implemented Firestore doc creation
@@ -49,7 +47,6 @@ export default function ProfilePage() {
             address: '',
           };
           await setDoc(userDocRef, initialData);
-          setUserData(initialData);
           setAddress('');
         }
         setIsLoading(false);

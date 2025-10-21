@@ -33,7 +33,7 @@ const AdvancedMarkerWrapper = ({ position, children, onClick, zIndex }: Advanced
     return () => {
       markerInstance.map = null;
     };
-  }, [map, content]);
+  }, [map, content, position]);
 
   useEffect(() => {
     if (!marker || !onClick) return;
@@ -42,12 +42,6 @@ const AdvancedMarkerWrapper = ({ position, children, onClick, zIndex }: Advanced
       listener.remove();
     };
   }, [marker, onClick]);
-
-  useEffect(() => {
-    if (marker) {
-      marker.position = position;
-    }
-  }, [marker, position]);
 
   useEffect(() => {
     if (marker) {
